@@ -10,11 +10,97 @@ const routes = [
   {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+  },
+  {
+    path: '/testimony',
+    name: 'testimony',
+    component: () => import(/* webpackChunkName: "about" */ '../views/TestimonyView.vue')
+  },
+  {
+    path: '/contact',
+    name: 'contact',
+    component: () => import(/* webpackChunkName: "about" */ '../views/ContactView.vue')
+  },
+  {
+    path: '/request',
+    name: 'request',
+    component: () => import(/* webpackChunkName: "about" */ '../views/RequestView.vue')
+  },
+
+  {
+    path: '/admin',
+    name: 'dashBoardAdminLogin',
+    component: () => import(/* webpackChunkName: "dashBoardAdminLogin" */ '../views/Admin/DashBoardAdminLogin.vue'),
+    meta: { hideNavigation: true }
+  },
+  {
+    path: '/dashBoard-side-bar-admin',
+    name: 'dashBoardSideBarAdmin',
+    component: () => import(/* webpackChunkName: "dashBoardSideBarAdmin" */ '../views/Admin/DashBoardSideBarAdmin.vue'),
+    meta: { hideNavigation: true },
+    redirect: { name: 'listOfUsers' },
+    children: [
+      {
+        path: "/list-of-users",
+        name: "listOfUsers",
+        component: () =>
+            import(/* webpackChunkName: "listOfUsers" */ "../views/Admin/ListOfUsers.vue"),
+        meta: { hideNavigation: true }
+      },
+      {
+        path: "/investments-list",
+        name: "investmentsList",
+        component: () =>
+            import(/* webpackChunkName: "investmentsList" */ "../views/Admin/InvestmentsList.vue"),
+        meta: { hideNavigation: true }
+      },
+      {
+        path: "/deposit-requests",
+        name: "depositRequests",
+        component: () =>
+            import(/* webpackChunkName: "depositRequests" */ "../views/Admin/DepositRequests.vue"),
+        meta: { hideNavigation: true }
+      },
+      {
+        path: "/withdrawal-requests",
+        name: "withdrawalRequests",
+        component: () =>
+            import(/* webpackChunkName: "withdrawalRequests" */ "../views/Admin/WithdrawalRequests.vue"),
+        meta: { hideNavigation: true }
+      },
+      {
+        path: "/user-information",
+        name: "userInformation",
+        component: () =>
+            import(/* webpackChunkName: "userInformation" */ "../views/Admin/UserInformation.vue"),
+        meta: { hideNavigation: true }
+      },
+      {
+        path: "/user-dashBoard-view",
+        name: "userDashBoardView",
+        component: () =>
+            import(/* webpackChunkName: "UserDashBoardView" */ "../views/Admin/UserDashBoardView.vue"),
+        meta: { hideNavigation: true }
+      },
+
+      {
+        path: "/change-password-admin",
+        name: "changePasswordAdmin",
+        component: () =>
+            import(/* webpackChunkName: "ChangePasswordAdmin" */ "../views/Admin/ChangePasswordAdmin.vue"),
+        meta: { hideNavigation: true }
+      },
+
+      {
+        path: "/add-new-user",
+        name: "addNewUser",
+        component: () =>
+            import(/* webpackChunkName: "ChangePasswordAdmin" */ "../views/Admin/AddNewUser.vue"),
+        meta: { hideNavigation: true }
+      },
+    ]
+  },
 ]
 
 const router = createRouter({
