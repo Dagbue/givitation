@@ -73,7 +73,7 @@
               <div class="social-logo">
                 <div class="last-div">
                   <i class='bx bxs-map' ></i>
-                  <p class="last-div-para">48 Jalan Dungun, KL City, Kuala Lumpur</p>
+                  <p class="last-div-para">15 Carrington St, Sydney NSW 2000, Australia</p>
                 </div>
               </div>
               <div class="social-logo">

@@ -49,7 +49,9 @@
     </div>
 
     <div class="maps">
-      <iframe width="100%" height="700" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="gmap_canvas" src="https://maps.google.com/maps?width=736&amp;height=569&amp;hl=en&amp;q=48,%20Jalan%20Dungun,%20Bukit%20Damansara,%2050490%20Kuala%20Lumpur,%20Wilayah%20Persekutuan%20Kuala%20Lumpur,%20Malaysia%20Kuala%20Lumpur,%20Malaysia+(Maturity%20Mingle)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+
+      <iframe width="100%" height="700" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="gmap_canvas" src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=15%20Carrington%20St,%20Sydney%20NSW%202000,%20Australia%20Sydney+(Givitation)&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+
     </div>
   </div>
 </template>
