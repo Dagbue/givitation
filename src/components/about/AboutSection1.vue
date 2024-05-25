@@ -2,7 +2,7 @@
   <div class="alpha">
 
     <div class="section-1">
-      <p class="section-header">The Givitation Community At A Glance</p>
+      <p class="section-header">The Match Connecting Community At A Glance</p>
     </div>
 
 
@@ -17,7 +17,7 @@
 
       <div class="section-2-content">
         <p class="text-1">60+</p>
-        <p class="text-2">Countries Where Members Use Givitation</p>
+        <p class="text-2">Countries Where Members Use Match Connecting</p>
       </div>
       <div class="vl"></div>
       <hr />

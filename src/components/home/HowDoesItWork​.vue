@@ -14,7 +14,7 @@
         </div>
         <div class="content-part-2">
           <p class="text-1">Search</p>
-          <p class="text-2">The simple steps to follow to have a great experience using Givitation. All you have to do is follow
+          <p class="text-2">The simple steps to follow to have a great experience using Match Connecting. All you have to do is follow
             your gut and your heart!</p>
         </div>
 

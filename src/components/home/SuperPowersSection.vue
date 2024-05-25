@@ -1,8 +1,8 @@
 <template>
   <div class="alpha">
     <div class="header-part">
-      <p class="header-part-text-1">Givitation super powers</p>
-      <p class="header-part-text-2">Givitation is like a breath of fresh Air. Secure and Discreet with ready to use features we are sure you will love.</p>
+      <p class="header-part-text-1">Match Connecting super powers</p>
+      <p class="header-part-text-2">Match Connecting is like a breath of fresh Air. Secure and Discreet with ready to use features we are sure you will love.</p>
     </div>
 
     <div class="card-part">
@@ -12,7 +12,7 @@
 <!--          <img class='tokenImage' src="" alt="image" />-->
           <svg class="card-image" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" style="fill: #C30000 "><path d="M20 8h-5.612l1.123-3.367c.202-.608.1-1.282-.275-1.802S14.253 2 13.612 2H12c-.297 0-.578.132-.769.36L6.531 8H4c-1.103 0-2 .897-2 2v9c0 1.103.897 2 2 2h13.307a2.01 2.01 0 0 0 1.873-1.298l2.757-7.351A1 1 0 0 0 22 12v-2c0-1.103-.897-2-2-2zM4 10h2v9H4v-9zm16 1.819L17.307 19H8V9.362L12.468 4h1.146l-1.562 4.683A.998.998 0 0 0 13 10h7v1.819z"></path></svg>
           <h2>Simple to use</h2>
-          <p class='description'>Simple steps to follow to have a Givitation connection.</p>
+          <p class='description'>Simple steps to follow to have a Match Connecting connection.</p>
         </div>
       </div>
 
@@ -39,7 +39,7 @@
 <!--          <img class='tokenImage' src="" alt="image" />-->
           <svg class="card-image" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" style="fill: #C30000"><circle cx="6" cy="4" r="2"></circle><path d="M9 7H3a1 1 0 0 0-1 1v7h2v7h4v-7h2V8a1 1 0 0 0-1-1z"></path><circle cx="17" cy="4" r="2"></circle><path d="M20.21 7.73a1 1 0 0 0-1-.73h-4.5a1 1 0 0 0-1 .73L12 14h2l-1 4h2v4h4v-4h2l-1-4h2z"></path></svg>
           <h2>Cool community</h2>
-          <p class='description'>Givitation network is full of cool members.</p>
+          <p class='description'>Match Connecting network is full of cool members.</p>
         </div>
       </div>
 

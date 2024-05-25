@@ -9,9 +9,13 @@
       <div class="first-section">
 <!--        <p class="first-section-text-1">Start</p>-->
         <p class="first-section-text-2">Start Connecting</p>
-        <p class="first-section-text-3">Givitation is the luxury Connecting site for successful mommies and daddy who just want to have fun discreetly.</p>
-        <p class="first-section-text-4">“Elevating your experience” is the foundation of Givitation, where you will discover the connections, passions, and expectations you desire…every step of the way.</p>
-        <p class="first-section-text-4">Givitation helps members choose connections that uniquely align with their personal passions and dreams. With such a diverse range of people and passions, we provide a safe environment to explore, discover, and evolve what desire truly means to you.</p>
+        <p class="first-section-text-3">Match Connecting is the luxury Connecting site for successful mommies and
+          daddy who just want to have fun discreetly.</p>
+        <p class="first-section-text-4">“Elevating your experience” is the foundation of Match Connecting, where you
+          will discover the connections, passions, and expectations you desire…every step of the way.</p>
+        <p class="first-section-text-4">Match Connecting helps members choose connections that uniquely align with
+          their personal passions and dreams. With such a diverse range of people and passions, we provide a safe
+          environment to explore, discover, and evolve what desire truly means to you.</p>
       </div>
 
       <div class="second-section">

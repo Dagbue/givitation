@@ -4,7 +4,7 @@
     <div class="sidebar" v-show="!mobile">
 
       <div class="logo">
-        <img src="@/assets/companylogo.svg" alt="logo" class="afo-logo" />
+        <img src="@/assets/companylogo.png" alt="logo" class="afo-logo" />
       </div>
 
       <ul class="nav-list" >

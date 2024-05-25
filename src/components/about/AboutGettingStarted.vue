@@ -2,13 +2,13 @@
   <div class="alpha">
 
     <div class="section-1">
-      <p class="section-1-header">Getting Started on Givitation</p>
+      <p class="section-1-header">Getting Started on Match Connecting</p>
     </div>
 
     <div class="section-2">
       <div class="section-2-content">
         <p class="text-1">Find What You Want</p>
-        <p class="text-2">Everyone wants something different out of connections. Givitation helps you find what you are looking for.</p>
+        <p class="text-2">Everyone wants something different out of connections. Match Connecting helps you find what you are looking for.</p>
       </div>
 
       <div class="section-2-content">

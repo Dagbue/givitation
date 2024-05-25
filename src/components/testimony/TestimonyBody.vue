@@ -4,7 +4,7 @@
       <figcaption>
         <blockquote>
           <p>“I am currently married and was facing difficulties in providing for my family. However, thanks to the
-            assistance of my sugar mommy, I am now able to take care of my family's needs. I am grateful to Givitation
+            assistance of my sugar mommy, I am now able to take care of my family's needs. I am grateful to Match Connecting
             for facilitating this positive change in my life”</p>
         </blockquote>
         <h3>Taj, 23</h3>
@@ -15,8 +15,8 @@
       <figcaption>
         <blockquote>
           <p>“Struggling to afford my rent became a real challenge until one day, while browsing on Google, I
-            stumbled upon Givitation's advertisement for a sugar daddy. This fortuitous encounter turned
-            out to be one of the best decisions I made this year. Thanks to Givitation, I found the support I
+            stumbled upon Match Connecting's advertisement for a sugar daddy. This fortuitous encounter turned
+            out to be one of the best decisions I made this year. Thanks to Match Connecting, I found the support I
             needed to overcome my financial burden and secure a place to live. Grateful beyond words”</p>
         </blockquote>
         <h3>Jose M. Jose</h3>
@@ -54,7 +54,7 @@
     <figure class="snip1533">
       <figcaption>
         <blockquote>
-          <p>“My attraction towards older women has always been strong, and thanks to Givitation, pursuing this
+          <p>“My attraction towards older women has always been strong, and thanks to Match Connecting, pursuing this
             preference has become even more convenient. Now, I can engage in activities I genuinely enjoy and receive
             financial compensation for it. This newfound opportunity is truly amazing and brings me immense satisfaction.” </p>
         </blockquote>

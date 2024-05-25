@@ -20,7 +20,7 @@
               <span>CONTACT</span>
               <span>US</span>
             </div>
-            <div class="app-contact">EMAIL : support@givitation.com</div>
+            <div class="app-contact">EMAIL : support@matchconnecting.com</div>
 
             <a href="https://t.me/officialservicelove" class="app-contact">TELEGRAM : https://t.me/officialservicelove</a>
           </div>

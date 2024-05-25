@@ -20,7 +20,7 @@
 
       <div class="style-4">
 
-        <img alt="company logo" src="@/assets/companylogo.svg" class="logo" />
+        <img alt="company logo" src="@/assets/companylogo.png" class="logo" />
 
         <ul class="menu-4" v-show="!mobile">
           <li class="link"><router-link  to="/" class="link-2">HOME</router-link></li>
@@ -111,7 +111,7 @@ export default {
 }
 
 .logo {
-  width: 14%;
+  width: 15%;
   margin-left: 3%;
   /*padding-top: 2px;*/
   padding-bottom: 2px;
@@ -288,10 +288,6 @@ hr {
   margin-top: 20px;
 }
 
-.separate{
-  display: flex;
-}
-
 
 
 
@@ -322,26 +318,30 @@ hr {
     justify-content: space-between;
   }
   .logo {
-    width: 19%;
-    margin-left: unset;
-    padding-left: unset;
+    width: 100%;
+    margin-left: 5%;
+    /*margin-left: unset;*/
+    /*padding-left: unset;*/
   }
   .bx-menu{
     font-size: 30px;
-    margin-top: 13px;
+    /*margin-top: 13px;*/
   }
+  .separate{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+  }
+
 }
 
 @media (max-width: 600px) {
   .bx-menu{
     font-size: 35px;
-    margin-top: 12px;
+    /*margin-top: 12px;*/
   }
-  .logo {
-    min-width: 30%;
-    margin-left: unset;
-    padding-left: unset;
-  }
+
 
   .dropdown-nav{
     padding-right: 10%;
@@ -363,13 +363,13 @@ hr {
 @media (max-width: 450px) {
   .bx-menu{
     font-size: 35px;
-    margin-top: 10px;
+    /*margin-top: 10px;*/
   }
-  .logo {
-    width: 35%;
-    margin-left: unset;
-    padding-left: unset;
-  }
+  /*.logo {*/
+  /*  width: 35%;*/
+  /*  margin-left: unset;*/
+  /*  padding-left: unset;*/
+  /*}*/
 
 }
 

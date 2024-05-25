@@ -8,17 +8,17 @@
       </div>
 
       <div class="section-1-images">
-        <img src="https://www.seeking.com/wp-content/uploads/2021/12/tnr-1.svg" alt="" class="section-1-image" />
+        <img src="@/assets/BI.svg" alt="" class="section-1-image" />
 
-        <img src="https://www.seeking.com/wp-content/uploads/2021/12/forbes.svg" alt="" class="section-1-image" />
+        <img src="@/assets/cnn.svg" alt="" class="section-1-image" />
 
-        <img src="https://www.seeking.com/wp-content/uploads/2021/12/wall-street-1-2.svg" alt="" class="section-1-image" />
+        <img src="@/assets/forbes.svg" alt="" class="section-1-image" />
 
-        <img src="https://www.seeking.com/wp-content/uploads/2021/12/cnn.svg" alt="" class="section-1-image" />
+        <img src="@/assets/THP-2.svg" alt="" class="section-1-image" />
 
-        <img src="https://www.seeking.com/wp-content/uploads/2021/12/THP-2.svg" alt="" class="section-1-image" />
+        <img src="@/assets/tnr-1.svg" alt="" class="section-1-image" />
 
-        <img src="https://www.seeking.com/wp-content/uploads/2021/12/BI.svg" alt="" class="section-1-image" />
+        <img src="@/assets/wall-street-1-2.svg" alt="" class="section-1-image" />
       </div>
 
 
@@ -33,7 +33,7 @@
           <div class="footer-link-container">
             <h3 class="footer-title">About Us</h3>
             <p class="footer-link width">
-              Givitation is the largest luxury and secured connection site for the beautiful, wealthy, and successful, with 15 plus years in over 60 countries.
+              Match Connecting is the largest luxury and secured connection site for the beautiful, wealthy, and successful, with 15 plus years in over 60 countries.
             </p>
 
             <div class="social">
@@ -47,7 +47,7 @@
             </div>
 
             <p class="footer-link width">
-              MEMBERS OF GIVITATION ARE NOT SUBJECT TO MANDATORY BACKGROUND SCREENINGS BUT HAVE THE OPTION TO SUBMIT FOR A BACKGROUND CHECK AND/OR ID VERIFICATION.
+              MEMBERS OF MATCH CONNECTING ARE NOT SUBJECT TO MANDATORY BACKGROUND SCREENINGS BUT HAVE THE OPTION TO SUBMIT FOR A BACKGROUND CHECK AND/OR ID VERIFICATION.
             </p>
           </div>
 
@@ -79,7 +79,7 @@
               <div class="social-logo">
                 <div class="last-div">
                   <i class='bx bx-mail-send' style='color:#ffffff'></i>
-                  <p class="last-div-para">support@givitation.com</p>
+                  <p class="last-div-para">support@matchconnecting.com</p>
                 </div>
               </div>
             </div>
@@ -89,7 +89,7 @@
       </div>
       <hr />
       <p class="copyright">
-        © 2012 Givitation | All Rights Reserved
+        © 2012 Match Connecting | All Rights Reserved
       </p>
     </div>
 
@@ -150,7 +150,7 @@ export default {
 
 .section-1-image{
   object-fit: contain;
-  width: 11%;
+  width: 12%;
 }
 
 

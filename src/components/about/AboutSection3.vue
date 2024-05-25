@@ -7,17 +7,17 @@
 
     <div class="text-part">
       <div class="first-section">
-        <p class="first-section-text-2">Givitation Evolution</p>
+        <p class="first-section-text-2">Match Connecting Evolution</p>
         <p class="first-section-text-3">Authenticity and open communication have always been the core principles
-          guiding what Givitation.com has to offer. Givitation began as GivitationArrangement, where established and attractive
+          guiding what Match Connecting.com has to offer. Match Connecting began as Match ConnectingArrangement, where established and attractive
           Sugar Daddies/Mamas could share their expectations for a Sugar baby upfront. Countless harmonious connections have
           been made since the website was created in 2012.</p>
-        <p class="first-section-text-4">As the world and the concept of Sugar Babies continue to evolve, so does Givitation.
+        <p class="first-section-text-4">As the world and the concept of Sugar Babies continue to evolve, so does Match Connecting.
           We are still committed to helping Sugar Daddies/Mamas find Sugar babies based on open communication, but we are much
-          more than that. Givitation is about identifying what drives us and how we can live our best lives with someone
+          more than that. Match Connecting is about identifying what drives us and how we can live our best lives with someone
           by our side.</p>
         <p class="first-section-text-4">Life is too short to settle. That is why we want our members to find
-          Connections that align with their personal goals and dreams. These Connections begin with Givitation.</p>
+          Connections that align with their personal goals and dreams. These Connections begin with Match Connecting.</p>
       </div>
 
 

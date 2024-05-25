@@ -8,9 +8,9 @@
     <div class="text-part">
       <div class="first-section">
         <p class="first-section-text-2">About</p>
-        <p class="first-section-text-3">Experience why Givitation is the best site for Attractive and Elegant people. Start Connecting</p>
-        <p class="first-section-text-4">Givitation.com is a site committed to creating connections between sugar daddies/mamas and more youthful sugar babies. sugar daddies/mamas can encounter new and energizing conceivable outcomes when they are connecting with youthful sugar babies</p>
-        <p class="first-section-text-4">The right partnership can have a profound impact on your personal growth, which is why Givitation.com doesn’t want you to settle for anything less than your ideal.</p>
+        <p class="first-section-text-3">Experience why Match Connecting is the best site for Attractive and Elegant people. Start Connecting</p>
+        <p class="first-section-text-4">Match Connecting.com is a site committed to creating connections between sugar daddies/mamas and more youthful sugar babies. sugar daddies/mamas can encounter new and energizing conceivable outcomes when they are connecting with youthful sugar babies</p>
+        <p class="first-section-text-4">The right partnership can have a profound impact on your personal growth, which is why Match Connecting.com doesn’t want you to settle for anything less than your ideal.</p>
         <p class="first-section-text-4">Connect Responsibly! Must be 18 and Over.</p>
       </div>
 
