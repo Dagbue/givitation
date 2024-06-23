@@ -37,7 +37,7 @@
       <div class="mobile">
         <div>
           <ul class="dropdown-nav" v-show="mobileNav">
-            <img alt="company logo" src="@/assets/companylogo.svg" class="logo2" />
+            <img alt="company logo" src="@/assets/companylogo.png" class="logo2" />
             <li @click="toggleMobileNav2"><router-link  to="/" >HOME</router-link></li>
             <li @click="toggleMobileNav2"><router-link  to="/about" >ABOUT US</router-link></li>
             <li @click="toggleMobileNav2"><router-link  to="/testimony" >TESTIMONIES</router-link></li>
@@ -207,21 +207,26 @@ i{
   max-width: 270px;
   height: 100%;
   /*background-color: #818a91;*/
-  background-color: rgba(129 ,138 ,145 , 0.95);
-  font-size: 19px;
+  background-color: rgba(0, 0, 0, 0.9);
+  /*font-size: 19px;*/
   /*text-align: left;*
   /*padding-left: 20px;*/
 }
 
 .logo2{
-  width: 50%;
-  margin-top: 1%;
+  width: 90%;
+  margin-top: 5%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .dropdown-nav li {
-  margin-top: 12%;
+  font-size: 15px;
   overflow: hidden;
   list-style: none;
+  height: 100%;
+  margin-left: 8%;
 }
 
 .dropdown-nav * {

@@ -4,15 +4,15 @@
     <div class="section-1">
 
       <div class="section-1-content">
-        <p class="section-1-header">As Featured In</p>
+        <p class="section-1-header">As featured in</p>
       </div>
 
       <div class="section-1-images">
-        <img src="@/assets/BI.svg" alt="" class="section-1-image" />
+<!--        <img src="@/assets/BI.svg" alt="" class="section-1-image" />-->
 
-        <img src="@/assets/cnn.svg" alt="" class="section-1-image" />
+<!--        <img src="@/assets/cnn.svg" alt="" class="section-1-image" />-->
 
-        <img src="@/assets/forbes.svg" alt="" class="section-1-image" />
+<!--        <img src="@/assets/forbes.svg" alt="" class="section-1-image" />-->
 
         <img src="@/assets/THP-2.svg" alt="" class="section-1-image" />
 
@@ -141,7 +141,7 @@ export default {
 
 .section-1-images{
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-content: center;
   align-items: center;
   margin-left: 5%;
