@@ -20,6 +20,7 @@ import FooterHome from "@/components/baseComponents/FooterHome.vue";
 export default {
   name: 'HomeView',
   components: {FooterHome, HowDoesItWork, SuperPowersSection, DatingSection, HeroSection},
+
 }
 </script>
 

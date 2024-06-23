@@ -16,6 +16,7 @@ const store = createStore({
     user: null,
     authIsReady: false,
     Approved: false,
+    isModalOpened: false,
   },
   mutations: {
     setUser(state, payload) {
@@ -26,11 +27,18 @@ const store = createStore({
     },
     changed(state, payload) {
       state.Approved =  payload;
-    }
+    },
+    updateIsModalOpened(state, payload){
+      state.isModalOpened = payload
+    },
   },
   getters: {
     finalChange(state) {
       return state.Approved;
+    },
+
+    getIsModalOpened: (state) => {
+      return state.isModalOpened;
     },
   },
   actions: {

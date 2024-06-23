@@ -100,8 +100,7 @@ hr {
 }
 
 
-@media (max-width: 990px) {
-}
+
 
 @media (max-width: 700px) {
   .section-2{
