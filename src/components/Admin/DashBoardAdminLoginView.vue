@@ -4,7 +4,7 @@
       <div class="wrapper">
         <div class="headline">
           <router-link to="/">
-            <img src="@/assets/companylogo.svg" alt="logo" class="company-logo">
+            <img src="@/assets/companylogo.png" alt="logo" class="company-logo">
           </router-link>
           <h2>
             Admin Login
