@@ -1,20 +1,6 @@
 <template>
   <template v-if="!$route.meta.hideNavigation" >
-
-<!--    <div class="topmost-header">-->
-<!--      <div class="topmost-header-1">-->
-<!--        <p class="topmost-header-text">-->
-<!--          <i class='bx bxs-map' ></i>-->
-<!--          C/O Michael Filiou Ltd Salisbury House, 81 High Street, Potters Bar, Hertfordshire, England, EN6 5AS-->
-<!--        </p>-->
-<!--        <p class="topmost-header-text">-->
-<!--          <i class='bx bxs-time-five' ></i>Mon – Sat: 9:00am–18:00pm.-->
-<!--        </p>-->
-<!--        &lt;!&ndash;          <p class="topmost-header-text">&ndash;&gt;-->
-<!--        &lt;!&ndash;            <i class='bx bxs-phone' ></i>+443300010876&ndash;&gt;-->
-<!--        &lt;!&ndash;          </p>&ndash;&gt;-->
-<!--      </div>-->
-<!--    </div>-->
+    <intro-message-modal @close="hideDialog" v-if="count === false && dialogIsVisible === true" />
 
     <div class="separate">
 
@@ -62,21 +48,37 @@
 </template>
 
 <script>
+import IntroMessageModal from "@/components/baseComponents/IntroMessageModal.vue";
+
 export default {
   name: "NavigationView",
+  components: {IntroMessageModal},
   data()  {
     return {
       value1: false,
       mobile: false,
       mobileNav: false,
       windowWidth: false,
+      dialogIsVisible: true,
     }
   },
   created() {
     window.addEventListener('resize', this.checkScreen);
     this.checkScreen();
   },
+  computed: {
+    // Access state using a computed property
+    count() {
+      return this.$store.state.isModalOpened;
+    },
+  },
   methods: {
+    showDialog() {
+      this.dialogIsVisible = true;
+    },
+    hideDialog() {
+      this.dialogIsVisible = false;
+    },
     toggleMobileNav() {
       this.mobileNav = !this.mobileNav;
     },
@@ -93,7 +95,7 @@ export default {
       this.mobileNav = false;
       return;
     }
-  }
+  },
 }
 </script>
 

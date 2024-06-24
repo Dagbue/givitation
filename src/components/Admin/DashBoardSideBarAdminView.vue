@@ -29,14 +29,14 @@
         </router-link>
 
 
-<!--        <router-link to="/deposit-requests">-->
-<!--          <li>-->
-<!--            <a class="hover">-->
-<!--              <img src="@/assets/send.svg" alt="logo" class="link-img" />-->
-<!--              <span class="links-name">Deposit Request</span>-->
-<!--            </a>-->
-<!--          </li>-->
-<!--        </router-link>-->
+        <router-link to="/deposit-requests">
+          <li>
+            <a class="hover">
+              <img src="@/assets/send.svg" alt="logo" class="link-img" />
+              <span class="links-name">Generate Code</span>
+            </a>
+          </li>
+        </router-link>
 
 <!--        <router-link to="/withdrawal-requests">-->
 <!--          <li>-->
@@ -111,6 +111,10 @@
 
     <div  class="dropdown-nav-2" v-show="mobileNav" >
 
+      <div class="logo">
+        <img src="@/assets/companylogo.png" alt="logo" class="afo-logo" />
+      </div>
+
 <!--      <div class="icon-2">-->
 <!--        <i @click="toggleMobileNav" class='bx bx-menu' v-show="mobile" :class="{'icon-active' : mobileNav}"></i>-->
 <!--      </div>-->
@@ -129,12 +133,12 @@
                   <router-link to="/investments-list" class="">Account</router-link>
                 </a>
               </li>
-<!--              <li @click="toggleMobileNav2">-->
-<!--                <a>-->
-<!--                  <i class='bx bx-support' ></i>-->
-<!--                  <router-link to="/support" class="">Support</router-link>-->
-<!--                </a>-->
-<!--              </li>-->
+              <li @click="toggleMobileNav2">
+                <a>
+                  <i class='bx bx-support' ></i>
+                  <router-link to="/deposit-requests" class="">Generate Code</router-link>
+                </a>
+              </li>
 <!--              <li @click="toggleMobileNav2">-->
 <!--                <a>-->
 <!--                  <i class='bx bx-line-chart' ></i>-->
@@ -295,7 +299,7 @@ body{
   height: 100vh;
   width: 235px;
   /*background-image: url('~@/assets/sidebarimage.svg');*/
-  background-color: #818a91;
+  background-color: #0f171c;
   padding: 6px 20px 37px;
 }
 .sidebar ul li{
@@ -328,7 +332,7 @@ body{
 }
 .links-name{
   font-size: 16px;
-  color: #101828;
+  color: #ffffff;
 }
 .wallets{
   font-size: 15.5px;
@@ -435,7 +439,7 @@ body{
   width: 100%;
   max-width: 250px;
   height: 100%;
-  background-color: #818a91;
+  background-color: #0f171c;
   font-size: 17px;
   text-align: center;
 }

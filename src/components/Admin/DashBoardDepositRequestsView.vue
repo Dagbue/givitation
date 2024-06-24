@@ -1,351 +1,282 @@
 <template>
   <div class="alpha">
-    <div class="body">
-      <h2>Deposit Requests</h2>
-      <div class="row trans-mgt">
-        <div class="form-group fg--search">
-          <button type="submit"><i class="fa fa-search"></i></button>
-          <input type="text" class="input" placeholder="Search Deposit Requests..."/>
+
+    <form @submit.prevent="sendMessage" style="color: white;" class="section-1-alpha">
+      <p class="text-1">Two Factor Authentication Settings
+
+      </p>
+      <hr/>
+      <div class="section-1-part-1">
+        <div>
+          <p v-if="this.history.code === ''"  class="text-2">Two Factor Authentication is Turned Off.</p>
+          <p v-else class="text-2 on">Two Factor Authentication is Turned On.</p>
         </div>
-        <div class="row filter_group">
-          <!--          <div class="blue">Download transactions</div>-->
-          <div class="action-content">
-            <img src="@/assets/Filterslines.svg"  alt="Export"/>
-            <p>Filter</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="section-5">
-      <div class="empty-state">
-        <img src="@/assets/empty.svg" alt="empty">
-        <p class="empty-state-text-1">You have nothing to see</p>
-        <p class="empty-state-text-2">This is where your Deposit Requests will appear</p>
-        <!--        <p class="empty-state-text-3">-->
-        <!--          <i class='bx bx-plus' ></i>-->
-        <!--          Transaction-->
-        <!--        </p>-->
+
+<!--        <div>-->
+<!--          <p  class="text-3">Two Factor Authentication is currently turned off and your Account / Assets are not totally secured.</p>-->
+<!--          <p  class="text-3">Two Factor Authentication is currently turned on and your Account / Assets are totally secured.</p>-->
+<!--        </div>-->
+
+        <p class="text-4">Turn on Two Factor Authentication  <span style="color: rgb(0, 128, 0);">
+          ( Highly Recommended ) </span>  Set Two Factor Authentication</p>
       </div>
 
-      <!--       <div class="table">-->
-      <!--          <table>-->
-      <!--          <tr>-->
-      <!--              <th>Sender</th>-->
-      <!--              <th>Receiver</th>-->
-      <!--              <th>Amount</th>-->
-      <!--              <th>Transaction Reference</th>-->
-      <!--              <th>Payment Reference</th>-->
-      <!--              <th>Date</th>-->
-      <!--              <th>Status</th>-->
-      <!--              <th></th>-->
-      <!--          </tr>-->
+      <div class="referral-part">
+        <input type="text" required="required" v-model="code"  placeholder="ENTER AUTHENTICATION CODE"  class="link-box"/>
+        <button
+            class="link-button"
+        >Save Code</button>
 
-      <!--          <tbody>-->
-      <!--          <tr>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--          </tr>-->
-      <!--          </tbody>-->
+      </div>
 
-      <!--          </table>-->
-      <!--          </div>-->
+      <div class="lawrence">
+        <p style="margin-top: 1%;" class="link-button-2" @click="generateRandomString" >
+          Generate Code
+        </p>
+        <p style="padding-top: 15px; font-size: 17px; padding-left: 10px;">&nbsp; : {{randomString}}</p>
+      </div>
 
-      <!--      <form>-->
-      <!--        <div class="fields-alpha-2">-->
-      <!--          &lt;!&ndash;      <label>Select Email</label>&ndash;&gt;-->
-      <!--          <select class="select-form"  aria-placeholder="Select Users Email" required>-->
-      <!--            <option value="" disabled>Select Users Email</option>-->
-      <!--            <option></option>-->
-      <!--          </select>-->
+    </form>
 
-      <!--          &lt;!&ndash;      <label>Enter Profit</label>&ndash;&gt;-->
-      <!--          <input type="number"  placeholder="Enter Profit"/>-->
-      <!--          <button class="btn"  type="button">Submit</button>-->
 
-      <!--          &lt;!&ndash;      <label>Enter Bonus</label>&ndash;&gt;-->
-      <!--          <input type="number"  placeholder="Enter Bonus"/>-->
-      <!--          <button class="btn"  type="button">Submit</button>-->
 
-      <!--          &lt;!&ndash;      <label>Enter Ref Bonus</label>&ndash;&gt;-->
-      <!--          <input type="number"  placeholder="Enter Ref Bonus"/>-->
-      <!--          <button class="btn"  type="button">Submit</button>-->
-      <!--        </div>-->
-      <!--      </form>-->
-    </div>
   </div>
 </template>
 
 <script>
+import {collection, doc, getDocs, setDoc} from "firebase/firestore";
+import {db} from "@/firebase/config";
+import Swal from "sweetalert2";
+
 export default {
-  name: "DashBoardDepositRequestsView"
+  name: "DashBoardDepositRequestsView",
+  data () {
+    return {
+      code: "",
+      randomString: "",
+      history: [],
+    }
+  },
+
+  computed: {
+
+  },
+
+  methods: {
+    generateRandomString() {
+      const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      let result = '';
+      for (let i = 0; i < 10; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+      }
+      this.randomString = result;
+    },
+
+    async sendMessage() {
+      // noinspection JSUnresolvedFunction,JSCheckFunctionSignatures
+      await setDoc(doc(db,"authenticationCode", "code"), {
+        code: this.code,
+      }, {merge: true})
+          .then(() => {
+            console.log('saved')
+          })
+      await this.populate()
+      await Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Code Set Successfully!',
+      });
+    },
+
+    async populate() {
+      const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));
+      querySnapshot2.forEach((doc) => {
+        let data = {
+          'code': doc.data().code,
+        }
+        this.history = data
+      })
+      this.code = this.history.code
+    }
+
+  },
+
+  async created() {
+    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));
+    querySnapshot2.forEach((doc) => {
+      let data = {
+        'code': doc.data().code,
+      }
+      this.history = data
+    })
+
+    await this.populate()
+  },
+
+  async mounted() {
+    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));
+    querySnapshot2.forEach((doc) => {
+      let data = {
+        'code': doc.data().code,
+      }
+      this.history = data
+    })
+
+    await this.populate()
+  }
 }
 </script>
 
 <style scoped>
-.body{
-  padding: 32px;
-}
-h2{
-  font-weight: 700;
-  font-size: 19px;
-  line-height: 25px;
-  color: #353542;
-}
-.row{
+.alpha{
   display: flex;
+  flex-direction: column;
+}
+.section-1-alpha{
+  margin-top: 4%;
+  float: left;
 
-}
-.trans-mgt{
-  margin-top: 17px;
-  /* align-items: center; */
-}
-.filter_group{
-  margin-left: auto;
-  gap: 16px;
-}
-
-.white{
-  display: flex;
-  align-items: center;
-  align-content: center;
-  background-color: #FFFFFF;
-  border: 1px solid #D0D5DD;
-  font-size: 13px;
-  padding:  6px 14px;
-  border-radius: 5px;
-  gap: 10px;
-}
-.blue{
-  display: flex;
-  align-items: center;
-  align-content: center;
-  padding: 6px 14px;
-  border-radius: 5px;
-  font-size: 13px;
-  background-color: #1570EF;
-  border: 1px solid #1570EF;
-  color: #ffffff;
-}
-
-.fg--search {
-  background: white;
-  position: relative;
-  width: 400px;
-  margin-left: 1%;
-}
-.fg--search input {
-  width: 100%;
-  padding: 10px;
-  padding-left: 15px;
+  background-color: #818a91;
+  padding: 35px 40px;
+  width: 80%;
   display: block;
-  background: #FFFFFF;
-  border: 1px solid #D0D5DD;
-  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
-  border-radius: 6px;
-}
-
-.fg--search button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 10px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;
-  margin-top: 5px;
-}
-
-.fa-search{
-  color: #667085;
-  margin-right: 10px;
-}
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 2%;
-}
-.table{
-  margin-left: 2%;
-  margin-right: 3%;
-}
-
-tr{
-  border: 1px solid #E3EBF6;
-}
-
-th {
-
-  background-color: #F9FBFD;
-  padding: 10px;
-  letter-spacing: 0.5px;
-  font-weight: 500;
-  font-size: 14px;
-  color: #667085;
-  text-align: center;
-}
-
-td {
-  /*border: 1px solid #E3EBF6;*/
-  text-align: center;
-  align-items: center;
-  align-content: center;
-  padding: 20px 8px;
-  /*letter-spacing: 1px;*/
-  color: #667085;
-  font-weight: 200;
-  font-size: 15px;
-  /*border-bottom: 1px solid #E3EBF6;*/
-}
-
-.empty-state{
-  text-align: center;
-  margin-top: 7%;
-  margin-right: 8%;
-}
-
-
-.empty-state-text-1{
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 20px;
-  color: #353542;
-  padding-top: 0.5%;
-  padding-bottom: 0.5%;
-}
-
-.empty-state-text-2{
-  font-weight: 200;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  color: #353542;
-  padding-bottom: 1.25%;
-}
-
-.empty-state-text-3{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 18px;
-  gap: 8px;
-  width: 130px;
-  margin-right: auto;
   margin-left: auto;
+  margin-right: auto;
+  border-radius: 5px;
+}
+.section-1-part-1{
+  display: block;
+  text-align: left;
+}
+.link-box{
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 5px 0 0 5px;
+  width: 370px;
   height: 35px;
-  background: #0765FF;
-  color: #FFFFFF;
-  border: 1px solid #0765FF;
-  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
-  border-radius: 5px;
-  font-size: 13px;
+  color: #000000;
+  padding: 5px 20px;
 }
 
-.empty-state-text-3:hover{
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+
+.link-button{
+  background-color: #D23535;
+  border: 1px solid #D23535;
+  display: inline-block;
+  font-weight: 400;
+  width: 130px;
+  padding: 5px 20px;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  /*background-color: transparent;*/
+  /*border: 1px solid transparent;*/
+  /*padding: 0.375rem 0.75rem;*/
+  font-size: 0.875rem;
+  height: 35px;
+  line-height: 1.4;
+  border-radius: 0 5px 5px 0;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.action-content{
+.link-button-2{
+  float: left;
+  background-color: #D23535;
+  border: 1px solid #D23535;
+  /*display: block;*/
+  /*margin: auto;*/
+  /*display: inline-block;*/
+  font-weight: 400;
+  width: 155px;
+  padding: 5px 20px;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  font-size: 0.875rem;
+  height: 35px;
+  line-height: 1.4;
+  border-radius:  5px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.text-1{
+  text-align: left;
+}
+
+.text-2{
+  color: #770101;
+  background-color: #facccc;
+  border-color: #f8b8b8;
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+}
+
+.on{
+  color: #ffffff;
+  background-color: rgba(0, 128, 0, 1);
+  border-color: rgb(0, 128, 0);
+}
+
+.text-3{
+  color: #142c78;
+  background-color: #d4ddfa;
+  border-color: #c3cff8;
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+}
+
+
+.referral-part{
+  padding-top: 30px;
   display: flex;
-  align-items: center;
-  align-content: center;
-  padding: 8px 14px;
-  gap: 8px;
-  width: 88px;
-  height: 36px;
-  background: #FFFFFF;
-  border: 1px solid #D0D5DD;
-  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
-  border-radius: 4px;
-  margin-right: 13px;
 }
-
-.action-content:hover{
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+hr {
+  border-top: 1px solid #ffffff;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
-
-.action-content p {
-  color: #667085;
-  font-size: 13px;
-}
-
-.fields-alpha-2{
-  box-shadow: 0 0 3px rgba(45, 82, 194, 0.1);
-  background-color: #F9FBFD;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 4%;
-  margin-left: 2%;
-  margin-right: 3%;
-  border-radius: 5px;
-  margin-top: 2%;
+.avatar{
+  padding-right: 10px;
+  width: 13%;
 }
 
 label{
-  color: white;
-  padding-right: 5px;
-  padding-left: 5px;
-}
-
-.btn{
-  padding: 5px 15px;
-  border-radius: 5px;
-  color: white;
-  background-color: #D23535;
-  margin-left: 1%;
-  border: 1px solid #D23535;
-}
-
-.btn:hover{
-  box-shadow: 0 0 3px rgba(45, 82, 194, 0.1);
-  -webkit-transition: all 0.35s ease;
-  transition: all 0.35s ease;
+  padding-bottom: 5px;
+  padding-top: 25px;
 }
 
 
-input {
-  box-sizing: border-box;
-  border: 1px solid #D0D5DD;
-  border-radius: 5px;
-  -webkit-transition: 0.3s;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 10px;
-  transition: 0.3s;
-  outline: none;
-  color: #667085;
-  letter-spacing: 0.5px;
-  margin-left: 35px;
+
+@media (max-width: 700px) {
+  .section-1-alpha{
+    margin-top: 5%;
+    float: unset;
+    background-color: #0f171c;
+    padding: 30px 40px;
+    width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .referral-part{
+    margin-bottom: 3%;
+  }
 }
 
-input:focus {
-  border: 1px solid #24405A;
+@media (max-width: 500px) {
+  .section-1-alpha{
+    margin-left: unset;
+    padding: 20px 20px;
+    width: 100%;
+    max-width: 500px;
+  }
 }
 
-select{
-  box-sizing: border-box;
-  border: 1px solid #D0D5DD;
-  border-radius: 5px;
-  -webkit-transition: 0.3s;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 10px;
-  transition: 0.3s;
-  outline: none;
-  color: #667085;
-  letter-spacing: 0.5px;
-  margin-left: 35px;
-}
-
-select:focus {
-  border: 1px solid #24405A;
-}
 </style>

@@ -1,7 +1,6 @@
 <template>
   <div class="alpha">
     <navigation-view/>
-    <intro-message-modal @close="hideDialog" v-if="count === false && dialogIsVisible === true"/>
     <router-view v-slot="{ Component }">
       <transition name="route" mode="out-in">
         <component :is="Component"></component>
@@ -10,38 +9,31 @@
   </div>
 </template>
 
-<script >
+<script setup>
 import NavigationView from "@/components/baseComponents/NavigationView.vue";
-import IntroMessageModal from "@/components/baseComponents/IntroMessageModal.vue";
-export default {
-  components: {IntroMessageModal, NavigationView},
-  data () {
-    return {
-      dialogIsVisible: true,
-    }
-  },
-
-  computed: {
-    // Access state using a computed property
-    count() {
-      return this.$store.state.isModalOpened;
-    },
-  },
-
-
-
-  methods: {
-    showDialog() {
-      this.dialogIsVisible = true;
-    },
-    hideDialog() {
-      this.dialogIsVisible = false;
-    },
-  },
-
-
-
-}
+// import IntroMessageModal from "@/components/baseComponents/IntroMessageModal.vue";
+// export default {
+//   components: {IntroMessageModal, NavigationView},
+//   data () {
+//     return {
+//       dialogIsVisible: true,
+//     }
+//   },
+//   computed: {
+//     // Access state using a computed property
+//     count() {
+//       return this.$store.state.isModalOpened;
+//     },
+//   },
+//   methods: {
+//     showDialog() {
+//       this.dialogIsVisible = true;
+//     },
+//     hideDialog() {
+//       this.dialogIsVisible = false;
+//     },
+//   },
+// }
 </script>
 
 

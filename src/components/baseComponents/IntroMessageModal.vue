@@ -20,9 +20,9 @@
           </div>
 
 
-          <p class="text-4">Click here to generate code :  {{randomString}}</p>
+<!--          <p class="text-4">Click here to generate code :  {{randomString}}</p>-->
 
-          <p @click="generateRandomString" class="link-button-2">Generate</p>
+<!--          <p @click="generateRandomString" class="link-button-2">Generate</p>-->
 
 
           <button class="link-button-3">Proceed to website</button>
@@ -39,6 +39,10 @@
 <script>
 
 
+import {collection, getDocs} from "firebase/firestore";
+import {db} from "@/firebase/config";
+import Swal from "sweetalert2";
+
 export default {
   name: "IntroMessageModal",
   emits: ['close'],
@@ -47,6 +51,7 @@ export default {
       dialogIsVisible: false,
       firstName: "",
       randomString: "",
+      history: [],
     }
   },
 
@@ -57,12 +62,19 @@ export default {
     },
   },
 
-
-
   methods: {
     async close() {
-      await this.updateModalOpened()
-      await this.$emit('close');
+      if(this.firstName === this.history.code){
+        await this.updateModalOpened()
+        await this.$emit('close');
+      }else{
+        await Swal.fire({
+          icon: 'error',
+          title: 'error',
+          text: 'Incorrect code request for code',
+        });
+      }
+
     },
     showDialog() {
       this.dialogIsVisible = true;
@@ -86,7 +98,27 @@ export default {
 
   },
 
+  async created() {
+    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));
+    querySnapshot2.forEach((doc) => {
+      let data = {
+        'code': doc.data().code,
+      }
+      this.history = data
+    })
 
+  },
+
+  async mounted() {
+    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));
+    querySnapshot2.forEach((doc) => {
+      let data = {
+        'code': doc.data().code,
+      }
+      this.history = data
+    })
+
+  }
 
 }
 </script>
@@ -100,6 +132,7 @@ li {display: inline-block; margin: 0 10px; }
   display: flex;
   flex-direction: column;
   text-align: left;
+  margin-top: 2%;
 }
 
 .text-1{
@@ -200,7 +233,7 @@ div{
 
 dialog {
   position: fixed;
-  top: 13vh;
+  top: 18vh;
   width: 32rem;
   height: 20rem;
   left: calc(50% - 17rem);
