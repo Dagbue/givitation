@@ -1,11 +1,11 @@
 <template>
   <div class="alpha">
     <div class="body">
-      <h2>Withdrawal Requests</h2>
+      <h2>Exclusive Connect Form</h2>
       <div class="row trans-mgt">
         <div class="form-group fg--search">
           <button type="submit"><i class="fa fa-search"></i></button>
-          <input type="text" class="input" placeholder="Search Withdrawal Requests..."/>
+          <input type="text" class="input" placeholder="Search..."/>
         </div>
         <div class="row filter_group">
           <!--          <div class="blue">Download transactions</div>-->
@@ -17,73 +17,153 @@
       </div>
     </div>
     <div class="section-5">
-      <div class="empty-state">
+      <div class="empty-state" v-if="this.history.length === 0">
         <img src="@/assets/empty.svg" alt="empty">
         <p class="empty-state-text-1">You have nothing to see</p>
-        <p class="empty-state-text-2">This is where your Withdrawal Requests will appear</p>
+        <p class="empty-state-text-2">This is where your Messages will appear</p>
         <!--        <p class="empty-state-text-3">-->
         <!--          <i class='bx bx-plus' ></i>-->
         <!--          Transaction-->
         <!--        </p>-->
       </div>
 
-      <!--       <div class="table">-->
-      <!--          <table>-->
-      <!--          <tr>-->
-      <!--              <th>Sender</th>-->
-      <!--              <th>Receiver</th>-->
-      <!--              <th>Amount</th>-->
-      <!--              <th>Transaction Reference</th>-->
-      <!--              <th>Payment Reference</th>-->
-      <!--              <th>Date</th>-->
-      <!--              <th>Status</th>-->
-      <!--              <th></th>-->
-      <!--          </tr>-->
+      <div class="table"  v-if="this.history.length >0">
+        <table>
+          <tr>
+            <th>Applicant's Name</th>
+            <th>Date Of Birth</th>
+            <th>Nationality</th>
+            <th>Mobile No</th>
 
-      <!--          <tbody>-->
-      <!--          <tr>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--              <td></td>-->
-      <!--          </tr>-->
-      <!--          </tbody>-->
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Payment Method</th>
+          </tr>
 
-      <!--          </table>-->
-      <!--          </div>-->
+          <tbody v-for="child in paginatedItems" :key="child.key">
+          <tr>
+            <td>{{child.applicantName}}</td>
+            <td>{{child.dateOfBirth}}</td>
+            <td>{{child.nationality}}</td>
+            <td>{{child.mobileNo}}</td>
 
-      <!--      <form>-->
-      <!--        <div class="fields-alpha-2">-->
-      <!--          &lt;!&ndash;      <label>Select Email</label>&ndash;&gt;-->
-      <!--          <select class="select-form"  aria-placeholder="Select Users Email" required>-->
-      <!--            <option value="" disabled>Select Users Email</option>-->
-      <!--            <option></option>-->
-      <!--          </select>-->
+            <td>{{child.email}}</td>
+            <td>{{child.gender}}</td>
+            <td>{{child.paymentMethod}}</td>
+          </tr>
+          </tbody>
 
-      <!--          &lt;!&ndash;      <label>Enter Profit</label>&ndash;&gt;-->
-      <!--          <input type="number"  placeholder="Enter Profit"/>-->
-      <!--          <button class="btn"  type="button">Submit</button>-->
+        </table>
+        <div class="pagination">
+          <button @click="previousPage" :disabled="currentPage === 1" class="previous">Previous</button>
+          <div class="page-indicator">
+            Page {{ currentPage }} of {{ totalPages }}
+          </div>
+          <button @click="nextPage" :disabled="currentPage === totalPages" class="previous">Next</button>
+        </div>
 
-      <!--          &lt;!&ndash;      <label>Enter Bonus</label>&ndash;&gt;-->
-      <!--          <input type="number"  placeholder="Enter Bonus"/>-->
-      <!--          <button class="btn"  type="button">Submit</button>-->
+        <form @submit.prevent="update">
+          <div class="fields-alpha-2">
+            <label class="fields-alpha-2-label">Select Email</label>
+            <select class="select-form" v-model="SelectEmail" aria-placeholder="Select Value" required>
+              <option v-for="option in history" :key="option" :value="option.email" >
+                {{ option.email }}
+              </option>
+            </select>
+            <button class="btn">Delete</button>
+          </div>
+        </form>
+      </div>
 
-      <!--          &lt;!&ndash;      <label>Enter Ref Bonus</label>&ndash;&gt;-->
-      <!--          <input type="number"  placeholder="Enter Ref Bonus"/>-->
-      <!--          <button class="btn"  type="button">Submit</button>-->
-      <!--        </div>-->
-      <!--      </form>-->
+
     </div>
   </div>
 </template>
 
 <script>
+import {deleteDoc, getFirestore} from "@firebase/firestore";
+import {collection, doc, getDocs} from "firebase/firestore";
+import Swal from "sweetalert2";
+import {db} from "@/firebase/config";
+
 export default {
-  name: "DashBoardWithdrawalRequestsView"
+  name: "DashBoardWithdrawalRequestsView",
+  data () {
+    return {
+      history: [],
+      currentPage: 1,
+      itemsPerPage: 10,
+      SelectEmail: "",
+    }
+  },
+  computed:{
+    paginatedItems() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.history.slice(startIndex, endIndex);
+    },
+    totalPages() {
+      return Math.ceil(this.history.length / this.itemsPerPage);
+    },
+  },
+  methods: {
+    previousPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    },
+
+    goToPage(pageNumber) {
+      if (pageNumber > 0 && pageNumber <= this.totalPages) {
+        this.currentPage = pageNumber;
+      }
+    },
+
+    async update() {
+      const db = getFirestore();
+      const docRef = doc(db, "ExclusiveConnectForm", this.SelectEmail);
+      await deleteDoc(docRef)
+          .then(async () => {
+            await Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Deleted Successfully!',
+            });
+            await location.reload();
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: 'error',
+              text: error.message,
+            });
+          })
+    },
+  },
+  async created() {
+
+
+    const querySnapshot2 = await getDocs(collection(db, "ExclusiveConnectForm"));
+    querySnapshot2.forEach((doc) => {
+      let data = {
+        'applicantName': doc.data().applicantName,
+        'dateOfBirth': doc.data().dateOfBirth,
+        'nationality': doc.data().nationality,
+        'mobileNo': doc.data().mobileNo,
+        'email': doc.data().email,
+        'gender': doc.data().gender,
+        'paymentMethod': doc.data().paymentMethod,
+      }
+      this.history.push(data)
+    })
+
+  },
 }
 </script>
 
@@ -277,75 +357,89 @@ td {
   font-size: 13px;
 }
 
-.fields-alpha-2{
-  box-shadow: 0 0 3px rgba(45, 82, 194, 0.1);
-  background-color: #F9FBFD;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 4%;
-  margin-left: 2%;
-  margin-right: 3%;
-  border-radius: 5px;
-  margin-top: 2%;
+.pagination{
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
 }
 
-label{
-  color: white;
-  padding-right: 5px;
-  padding-left: 5px;
+.previous{
+  /*display: flex;*/
+  /*align-content: center;*/
+  /*align-items: center;*/
+  text-align: center;
+  padding: 8px 14px;
+  gap: 8px;
+  font-size: 12px;
+  width: 100px;
+  height: 30px;
+  background: transparent;
+  color: #667085;
+  /*border: 1px solid #1570EF;*/
+  border: 1px solid #E3EBF6;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 4px;
+}
+
+.previous:hover{
+  box-shadow: 0 0 5px rgba(16, 24, 40, 0.2);
+}
+
+.page-indicator{
+  color: #667085;
+  font-weight: 200;
+  font-size: 13px;
+}
+
+.fields-alpha-2{
+  background-color: #818a91;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 25%;
+  margin-right: 25%;
+  border-radius: 5px;
+  margin-top: 2%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  align-content: center;
+}
+
+.fields-alpha-2-label{
+  color: #101828;
 }
 
 .btn{
-  padding: 5px 15px;
-  border-radius: 5px;
-  color: white;
+  /*margin-top: 3%;*/
+  color: #ffffff;
   background-color: #D23535;
-  margin-left: 1%;
   border: 1px solid #D23535;
+  padding: 10px 10px;
+  /*display: block;*/
+  /*margin-left: auto;*/
+  /*margin-right: auto;*/
+  text-align: center;
+  width: 18%;
+  border-radius: 5px;
+  transition: all 0.3s ease-in;
 }
 
 .btn:hover{
-  box-shadow: 0 0 3px rgba(45, 82, 194, 0.1);
-  -webkit-transition: all 0.35s ease;
-  transition: all 0.35s ease;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  color: #D23535;
 }
 
-
-input {
-  box-sizing: border-box;
+select {
+  width: 45%;
+  padding: 4px;
+  /*padding-left: 15px;*/
+  display: block;
+  background: #FFFFFF;
   border: 1px solid #D0D5DD;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
   border-radius: 5px;
-  -webkit-transition: 0.3s;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 10px;
-  transition: 0.3s;
-  outline: none;
-  color: #667085;
-  letter-spacing: 0.5px;
-  margin-left: 35px;
-}
-
-input:focus {
-  border: 1px solid #24405A;
-}
-
-select{
-  box-sizing: border-box;
-  border: 1px solid #D0D5DD;
-  border-radius: 5px;
-  -webkit-transition: 0.3s;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 10px;
-  transition: 0.3s;
-  outline: none;
-  color: #667085;
-  letter-spacing: 0.5px;
-  margin-left: 35px;
-}
-
-select:focus {
-  border: 1px solid #24405A;
 }
 </style>

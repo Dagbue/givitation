@@ -38,14 +38,14 @@
           </li>
         </router-link>
 
-<!--        <router-link to="/withdrawal-requests">-->
-<!--          <li>-->
-<!--            <a class="hover">-->
-<!--              <img src="../../assets/coin-stack.svg" alt="logo" class="link-img" />-->
-<!--              <span class="links-name">Withdrawal Request</span>-->
-<!--            </a>-->
-<!--          </li>-->
-<!--        </router-link>-->
+        <router-link to="/withdrawal-requests">
+          <li>
+            <a class="hover">
+              <img src="../../assets/coin-stack.svg" alt="logo" class="link-img" />
+              <span class="links-name">Connect Form</span>
+            </a>
+          </li>
+        </router-link>
 
 <!--        <router-link to="">-->
 <!--          <li>-->

@@ -2,6 +2,8 @@
   <template v-if="!$route.meta.hideNavigation" >
     <intro-message-modal @close="hideDialog" v-if="count === false && dialogIsVisible === true" />
 
+    <intro-message-modal2 @close="hideDialog2" v-if="dialogIsVisible2 === true"/>
+
     <div class="separate">
 
       <div class="style-4">
@@ -14,7 +16,7 @@
           <li class="link"><router-link  to="/testimony" class="link-2">TESTIMONIES</router-link></li>
           <li class="link"><router-link  to="/contact" class="link-2">CONTACT</router-link></li>
           <li class="link"><router-link  to="/request" class="link-2">REQUEST</router-link></li>
-<!--          <li class="link"><router-link  to="/register" class="auth">SIGNUP</router-link></li>-->
+          <li @click="showDialog2" class="link"><router-link  to="" class="auth">JOIN NOW</router-link></li>
 <!--          <li class="link"><router-link  to="/login" class="auth">LOGIN</router-link></li>-->
         </ul>
 
@@ -29,7 +31,7 @@
             <li @click="toggleMobileNav2"><router-link  to="/testimony" >TESTIMONIES</router-link></li>
             <li @click="toggleMobileNav2"><router-link  to="/contact" >CONTACT</router-link></li>
             <li @click="toggleMobileNav2"><router-link  to="/request" >REQUEST</router-link></li>
-<!--            <li @click="toggleMobileNav2"><router-link  to="/register" >SIGNUP</router-link></li>-->
+            <li @click="showDialog3"><router-link  to="" >JOIN NOW</router-link></li>
 <!--            <li @click="toggleMobileNav2"><router-link  to="/login" >LOGIN</router-link></li>-->
           </ul>
 
@@ -49,10 +51,11 @@
 
 <script>
 import IntroMessageModal from "@/components/baseComponents/IntroMessageModal.vue";
+import IntroMessageModal2 from "@/components/baseComponents/IntroMessageModal2.vue";
 
 export default {
   name: "NavigationView",
-  components: {IntroMessageModal},
+  components: {IntroMessageModal2, IntroMessageModal},
   data()  {
     return {
       value1: false,
@@ -60,6 +63,7 @@ export default {
       mobileNav: false,
       windowWidth: false,
       dialogIsVisible: true,
+      dialogIsVisible2: false,
     }
   },
   created() {
@@ -78,6 +82,16 @@ export default {
     },
     hideDialog() {
       this.dialogIsVisible = false;
+    },
+    showDialog2() {
+      this.dialogIsVisible2 = true;
+    },
+    showDialog3() {
+      this.dialogIsVisible2 = true;
+      this.mobileNav = false;
+    },
+    hideDialog2() {
+      this.dialogIsVisible2 = false;
     },
     toggleMobileNav() {
       this.mobileNav = !this.mobileNav;
@@ -115,7 +129,7 @@ export default {
 .logo {
   width: 15%;
   margin-left: 3%;
-  /*padding-top: 2px;*/
+  padding-top: 5px;
   padding-bottom: 2px;
 }
 
@@ -146,7 +160,7 @@ export default {
 .auth{
   background-color: #C30000;
   color: #FFFFFF;
-  padding: 0.4em 15px;
+  padding: 0.7em 20px;
   border-radius: 5px;
   position: relative;
   display: inline-block;
