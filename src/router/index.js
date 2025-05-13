@@ -29,6 +29,13 @@ const routes = [
   },
 
   {
+    path: '/joinNowView',
+    name: 'JoinNowView',
+    component: () => import(/* webpackChunkName: "about" */ '../views/JoinNowView.vue'),
+    meta: { hideNavigation: true },
+  },
+
+  {
     path: '/admin',
     name: 'dashBoardAdminLogin',
     component: () => import(/* webpackChunkName: "dashBoardAdminLogin" */ '../views/Admin/DashBoardAdminLogin.vue'),
