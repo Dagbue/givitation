@@ -119,8 +119,18 @@ export default {
         title: 'Success',
         text: 'Request sent Successfully!',
       });
-      this.close()
+      this.resetForm()
 
+    },
+
+    resetForm() {
+      this.applicantName = '';
+      this.dateOfBirth = '';
+      this.nationality = '';
+      this.mobileNo = '';
+      this.email = '';
+      this.gender = '';
+      this.paymentMethod = '';
     },
 
     async close() {
