@@ -62,21 +62,24 @@
 
       <div class="image-part">
         <img src="@/assets/home-couple.png" alt="" class="register-image"/>
+<!--        <button @click="sendEmail">click</button>-->
       </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import {collection, doc, getDocs, setDoc} from "firebase/firestore";
 import {db} from "@/firebase/config";
 import {serverTimestamp} from "firebase/database";
 import Swal from "sweetalert2";
+import emailjs from 'emailjs-com';
 
 export default {
   name: "JoinNowView",
   emits: ['close'],
-  data () {
+  data() {
     return {
       dialogIsVisible: false,
       applicantName: "",
@@ -92,7 +95,6 @@ export default {
   },
 
   computed: {
-    // Access state using a computed property
     count() {
       return this.$store.state.isModalOpened;
     },
@@ -100,8 +102,7 @@ export default {
 
   methods: {
     async sendMessage() {
-
-      await setDoc(doc(db,"ExclusiveConnectForm", this.email), {
+      await setDoc(doc(db, "ExclusiveConnectForm", this.email), {
         applicantName: this.applicantName,
         dateOfBirth: this.dateOfBirth,
         nationality: this.nationality,
@@ -113,14 +114,63 @@ export default {
       }, {merge: true})
           .then(() => {
             console.log('saved')
-          })
+          });
+
+      // EmailJS configuration
+      const templateParams = {
+        email: this.email,
+        subject: "Exclusive Connect Form",
+        companyName: "Match Connecting",
+        name: this.applicantName,
+        message: `Dear ${this.applicantName},
+
+Thank you for taking the exciting step toward joining Match Connecting, your premier destination for forging meaningful, discreet, and purposeful connections. We truly appreciate your interest in our exclusive community, where affluent individuals and vibrant companions come together to build rewarding relationships tailored to your unique preferences and lifestyle.
+
+Your membership application has been successfully submitted and is now under careful review by our dedicated team. At Match Connecting, we prioritize quality, discretion, and compatibility above all else—ensuring that every member aligns with our values of authenticity, respect, and mutual fulfillment. This process typically takes 24-48 hours, during which we'll verify your details to maintain the high standards that define our platform.
+
+Once approved, you'll receive your personalized Membership ID card, granting you full access to our suite of premium features. Imagine unlocking a world of:
+- **Curated Matches**: Handpicked connections based on your profile, interests, and desires, whether you're seeking companionship, adventure, or something more profound.
+- **Discreet Networking**: Private messaging, virtual events, and exclusive gatherings designed for seamless, confidential interactions—no matter your relationship status.
+- **Enhanced Security**: Advanced privacy tools to protect your identity and ensure a safe, enjoyable experience.
+- **Lifestyle Perks**: From travel tips and luxury recommendations to personalized matchmaking advice, we're here to elevate your journey.
+
+We're thrilled to welcome you into a network that's all about #RealConnections and #DatingWithPurpose. In the meantime, feel free to explore our website at www.matchconnecting.com for inspiring stories, tips on crafting the perfect profile, and insights into the vibrant world of modern matchmaking.
+
+For your records, your application reference is Ticket ID #6. If you have any questions or need assistance, our support team is just an email away at support@matchconnecting.com.
+
+We look forward to helping you discover the connections you've been seeking.`
+      };
+
+      emailjs.send('service_og8nelc', 'template_nhnuukb', templateParams, 'y1XAYDbFmTaxQCAUF')
+          .then((response) => {
+            console.log('Email sent successfully!', response.status, response.text);
+          }, (error) => {
+            console.log('Failed to send email:', error);
+          });
+
       await Swal.fire({
         icon: 'success',
         title: 'Success',
-        text: 'Request sent Successfully!',
+        text: 'Request sent Successfully! A confirmation email has been sent to you.',
       });
-      this.resetForm()
+      this.resetForm();
+    },
 
+    sendEmail() {
+      const templateParams = {
+        email: 'dagbuel@gmail.com',
+        subject: "Exclusive Connect Team",
+        companyName: "Exclusive Connect Team",
+        name: this.applicantName,
+        message: `Thank you, ${this.applicantName}, for submitting your membership request. Your application is being reviewed, and we will notify you once your Membership ID card is ready. For reference, your ticket ID is #6.`
+      };
+
+      emailjs.send('service_og8nelc', 'template_nhnuukb', templateParams, 'y1XAYDbFmTaxQCAUF')
+          .then((response) => {
+            console.log('Email sent successfully!', response.status, response.text);
+          }, (error) => {
+            console.log('Failed to send email:', error);
+          });
     },
 
     resetForm() {
@@ -155,7 +205,6 @@ export default {
     updateModalOpened() {
       this.$store.commit('updateIsModalOpened', true);
     },
-
   },
 
   async created() {
@@ -166,7 +215,6 @@ export default {
       }
       this.history = data
     })
-
   },
 
   async mounted() {
@@ -177,10 +225,125 @@ export default {
       }
       this.history = data
     })
-
   }
 }
 </script>
+
+
+<!--<script>-->
+<!--import {collection, doc, getDocs, setDoc} from "firebase/firestore";-->
+<!--import {db} from "@/firebase/config";-->
+<!--import {serverTimestamp} from "firebase/database";-->
+<!--import Swal from "sweetalert2";-->
+
+<!--export default {-->
+<!--  name: "JoinNowView",-->
+<!--  emits: ['close'],-->
+<!--  data () {-->
+<!--    return {-->
+<!--      dialogIsVisible: false,-->
+<!--      applicantName: "",-->
+<!--      dateOfBirth: "",-->
+<!--      nationality: "",-->
+<!--      mobileNo: "",-->
+<!--      email: "",-->
+<!--      gender: "",-->
+<!--      paymentMethod: "",-->
+<!--      randomString: "",-->
+<!--      history: [],-->
+<!--    }-->
+<!--  },-->
+
+<!--  computed: {-->
+<!--    // Access state using a computed property-->
+<!--    count() {-->
+<!--      return this.$store.state.isModalOpened;-->
+<!--    },-->
+<!--  },-->
+
+<!--  methods: {-->
+<!--    async sendMessage() {-->
+
+<!--      await setDoc(doc(db,"ExclusiveConnectForm", this.email), {-->
+<!--        applicantName: this.applicantName,-->
+<!--        dateOfBirth: this.dateOfBirth,-->
+<!--        nationality: this.nationality,-->
+<!--        mobileNo: this.mobileNo,-->
+<!--        email: this.email,-->
+<!--        gender: this.gender,-->
+<!--        paymentMethod: this.paymentMethod,-->
+<!--        createdAt: serverTimestamp(),-->
+<!--      }, {merge: true})-->
+<!--          .then(() => {-->
+<!--            console.log('saved')-->
+<!--          })-->
+<!--      await Swal.fire({-->
+<!--        icon: 'success',-->
+<!--        title: 'Success',-->
+<!--        text: 'Request sent Successfully!',-->
+<!--      });-->
+<!--      this.resetForm()-->
+
+<!--    },-->
+
+<!--    resetForm() {-->
+<!--      this.applicantName = '';-->
+<!--      this.dateOfBirth = '';-->
+<!--      this.nationality = '';-->
+<!--      this.mobileNo = '';-->
+<!--      this.email = '';-->
+<!--      this.gender = '';-->
+<!--      this.paymentMethod = '';-->
+<!--    },-->
+
+<!--    async close() {-->
+<!--      await this.$emit('close');-->
+<!--    },-->
+<!--    showDialog() {-->
+<!--      this.dialogIsVisible = true;-->
+<!--    },-->
+<!--    hideDialog() {-->
+<!--      this.dialogIsVisible = false;-->
+<!--    },-->
+<!--    generateRandomString() {-->
+<!--      const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';-->
+<!--      let result = '';-->
+<!--      for (let i = 0; i < 10; i++) {-->
+<!--        const randomIndex = Math.floor(Math.random() * characters.length);-->
+<!--        result += characters.charAt(randomIndex);-->
+<!--      }-->
+<!--      this.randomString = result;-->
+<!--    },-->
+
+<!--    updateModalOpened() {-->
+<!--      this.$store.commit('updateIsModalOpened', true);-->
+<!--    },-->
+
+<!--  },-->
+
+<!--  async created() {-->
+<!--    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));-->
+<!--    querySnapshot2.forEach((doc) => {-->
+<!--      let data = {-->
+<!--        'code': doc.data().code,-->
+<!--      }-->
+<!--      this.history = data-->
+<!--    })-->
+
+<!--  },-->
+
+<!--  async mounted() {-->
+<!--    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));-->
+<!--    querySnapshot2.forEach((doc) => {-->
+<!--      let data = {-->
+<!--        'code': doc.data().code,-->
+<!--      }-->
+<!--      this.history = data-->
+<!--    })-->
+
+<!--  }-->
+<!--}-->
+<!--</script>-->
 
 
 <style scoped >

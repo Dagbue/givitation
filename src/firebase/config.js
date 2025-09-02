@@ -19,10 +19,11 @@ const firebaseConfig = {
     measurementId: "G-FP329VSWPX"
 };
 
+
+
+
 // init firebase
 initializeApp(firebaseConfig)
-
-
 
 
 
@@ -40,4 +41,5 @@ const analytics = getAnalytics();
 
 
 export { auth, db, database, storage, analytics}
+
 
