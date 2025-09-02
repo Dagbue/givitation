@@ -138,7 +138,7 @@ We're thrilled to welcome you into a network that's all about #RealConnections a
 
 For your records, your application reference is Ticket ID #6. If you have any questions or need assistance, our support team is just an email away at support@matchconnecting.com.
 
-We look forward to helping you discover the connections you've been seeking.`
+We look forward to helping you discover the connections you have been seeking.`
       };
 
       emailjs.send('service_og8nelc', 'template_nhnuukb', templateParams, 'y1XAYDbFmTaxQCAUF')
