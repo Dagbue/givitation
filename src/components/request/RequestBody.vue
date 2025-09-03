@@ -1,70 +1,50 @@
 <template>
   <div class="alpha">
-
     <div class="form">
-
       <p class="header">Find you a Match</p>
-
       <form @submit.prevent="sendMessage">
-
-
         <div class="section-1">
           <div class="input-form-2">
             <p class="select-label">Full Name</p>
             <input type="text" class="input-form-1" required placeholder="Full Name" v-model="fullName" />
           </div>
         </div>
-
-        <hr/>
-
-
+        <hr />
         <div class="section-1">
           <div class="input-form-2">
             <p class="select-label">Email</p>
-            <input type="email" class="input-form-1" required placeholder="Email" v-model="email"/>
+            <input type="email" class="input-form-1" required placeholder="Email" v-model="email" />
           </div>
         </div>
-
-        <hr/>
-
+        <hr />
         <div class="section-1">
           <p class="section-1-header">I am a</p>
           <div class="section-1-content">
-
             <div class="part-1">
               <input type="radio" v-model="gender" value="Male" />
               <p>Male</p>
             </div>
-
             <div class="part-1">
               <input type="radio" v-model="gender" value="Female" />
               <p>Female</p>
             </div>
-
           </div>
         </div>
-
-        <hr/>
-
+        <hr />
         <div class="section-1">
           <p class="section-1-header">Looking for a</p>
           <div class="section-1-content">
-
             <div class="part-1">
               <input type="radio" v-model="request" value="Sugar Daddy" />
               <p>Sugar Daddy</p>
             </div>
-
             <div class="part-1">
               <input type="radio" v-model="request" value="Sugar Mama" />
               <p>Sugar Mama</p>
             </div>
-
           </div>
         </div>
-
-        <hr/>
-
+        <hr />
         <div class="section-1">
           <div class="input-form-2">
             <p class="select-label">Age</p>
@@ -78,13 +58,11 @@
             </select>
           </div>
         </div>
-
-        <hr/>
-
+        <hr />
         <div class="section-1">
           <div class="input-form-2">
             <p class="select-label">Country</p>
-            <select class="input-form-1" v-model="country" name="country" id="country" required >
+            <select class="input-form-1" v-model="country" name="country" id="country" required>
               <option selected disabled value="">Choose Country</option>
               <option value="Afghanistan">Afghanistan</option>
               <option value="Albania">Albania</option>
@@ -138,7 +116,7 @@
               <option value="Congo, the Democratic Republic of the">Congo, the Democratic Republic of the</option>
               <option value="Cook Islands">Cook Islands</option>
               <option value="Costa Rica">Costa Rica</option>
-              <option value="Cote d&#039;Ivoire">Cote d&#039;Ivoire</option>
+              <option value="Cote d'Ivoire">Cote d'Ivoire</option>
               <option value="Croatia (Hrvatska)">Croatia (Hrvatska)</option>
               <option value="Cuba">Cuba</option>
               <option value="Cyprus">Cyprus</option>
@@ -199,11 +177,11 @@
               <option value="Kazakhstan">Kazakhstan</option>
               <option value="Kenya">Kenya</option>
               <option value="Kiribati">Kiribati</option>
-              <option value="Korea, Democratic People&#039;s Republic of">Korea, Democratic People&#039;s Republic of</option>
+              <option value="Korea, Democratic People's Republic of">Korea, Democratic People's Republic of</option>
               <option value="Korea, Republic of">Korea, Republic of</option>
               <option value="Kuwait">Kuwait</option>
               <option value="Kyrgyzstan">Kyrgyzstan</option>
-              <option value="Lao, People&#039;s Democratic Republic">Lao, People&#039;s Democratic Republic</option>
+              <option value="Lao, People's Democratic Republic">Lao, People's Democratic Republic</option>
               <option value="Latvia">Latvia</option>
               <option value="Lebanon">Lebanon</option>
               <option value="Lesotho">Lesotho</option>
@@ -328,38 +306,34 @@
             </select>
           </div>
         </div>
-
-        <hr/>
-
+        <hr />
         <div class="section-1">
           <div class="input-form-2">
             <p class="select-label">Enter State/Province</p>
             <input type="text" class="input-form-1" required placeholder="State/Province" v-model="state" />
           </div>
         </div>
-
-        <hr/>
-
+        <hr />
         <div class="button-part">
-          <button class="button button-primary">Send a Request</button>
+          <button class="button button-primary" type="submit" :disabled="isLoading">
+            <span v-if="isLoading" class="spinner"></span>
+            {{ isLoading ? 'SENDING...' : 'Send a Request' }}
+          </button>
         </div>
-
       </form>
-
     </div>
-
     <div class="image-part">
-      <img src="@/assets/home-couple.png" alt="" class="register-image"/>
+      <img src="@/assets/home-couple.png" alt="" class="register-image" />
     </div>
-
   </div>
 </template>
 
 <script>
 import Swal from "sweetalert2";
-import { serverTimestamp,} from "firebase/database";
-import {db} from "@/firebase/config";
-import {doc, setDoc,} from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
+import { db } from "@/firebase/config";
+import { doc, setDoc } from "firebase/firestore";
+
 export default {
   name: "RequestBody",
   data() {
@@ -370,51 +344,63 @@ export default {
       request: "",
       age: "",
       country: "",
-      state: ""
+      state: "",
+      isLoading: false, // New reactive property for loading state
     };
   },
   methods: {
     async sendMessage() {
-
-      await setDoc(doc(db,"Requests", this.email), {
-        fullName: this.fullName,
-        email: this.email,
-        gender: this.gender,
-        request: this.request,
-        age: this.age,
-        country: this.country,
-        state: this.state,
-        createdAt: serverTimestamp(),
-      }, {merge: true})
-          .then(() => {
-            console.log('saved')
-          })
-      await Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Request sent Successfully!',
-      });
-      this.resetForm()
-
+      try {
+        this.isLoading = true; // Start loading
+        await setDoc(
+            doc(db, "Requests", this.email),
+            {
+              fullName: this.fullName,
+              email: this.email,
+              gender: this.gender,
+              request: this.request,
+              age: this.age,
+              country: this.country,
+              state: this.state,
+              createdAt: serverTimestamp(),
+            },
+            { merge: true }
+        );
+        console.log("saved");
+        await Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Request sent Successfully!",
+        });
+        this.resetForm();
+      } catch (error) {
+        console.error("Error sending request:", error);
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to send request. Please try again.",
+        });
+      } finally {
+        this.isLoading = false; // Stop loading regardless of success or failure
+      }
     },
 
     resetForm() {
-      this.fullName = '';
-      this.email = '';
-      this.gender = '';
-      this.request = '';
-      this.age = '';
-      this.country = '';
-      this.state = '';
+      this.fullName = "";
+      this.email = "";
+      this.gender = "";
+      this.request = "";
+      this.age = "";
+      this.country = "";
+      this.state = "";
     },
-
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-.alpha{
-  color: #FFFFFF;
+.alpha {
+  color: #ffffff;
   display: flex;
   align-content: center;
   align-items: center;
@@ -422,24 +408,24 @@ export default {
   margin-bottom: 5%;
 }
 
-.form{
+.form {
   width: 50%;
   margin-left: 2%;
   margin-right: 3%;
 }
 
-.header{
+.header {
   text-align: center;
   font-size: 35px;
   margin-bottom: 4%;
   margin-top: 2%;
 }
 
-.section-1-content{
+.section-1-content {
   display: flex;
 }
 
-.part-1{
+.part-1 {
   display: flex;
   align-content: center;
   align-items: center;
@@ -459,17 +445,17 @@ hr {
   margin-top: 3%;
 }
 
-.section-1-header{
+.section-1-header {
   margin-bottom: 2%;
   margin-top: 2%;
   font-size: 20px;
 }
 
-.input-form-2{
+.input-form-2 {
   display: block;
 }
 
-.input-form-1{
+.input-form-1 {
   order: 1;
   width: 100%;
   padding: 13px 20px;
@@ -484,7 +470,6 @@ select {
   -webkit-transition: 0.3s;
   padding-top: 12px;
   padding-bottom: 12px;
-  /*transition: 0.3s;*/
   outline: none;
   color: #667085;
   letter-spacing: 0.5px;
@@ -492,7 +477,6 @@ select {
   background-color: #282c34;
   background: linear-gradient(0deg, rgba(40, 44, 52, 0.2) 0%, rgba(40, 44, 52, 0.2) 100%);
   box-shadow: 0 7px 20px 5px #00000088;
-  /*border-radius: 0.7rem;*/
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
   overflow: hidden;
@@ -500,16 +484,16 @@ select {
 }
 
 select:focus {
-  border: 1px solid #24405A;
+  border: 1px solid #24405a;
 }
 
-.select-label{
+.select-label {
   margin-bottom: 2%;
   margin-top: 2%;
   font-size: 20px;
 }
 
-input::placeholder{
+input::placeholder {
   color: #667085;
 }
 
@@ -519,7 +503,6 @@ input {
   -webkit-transition: 0.3s;
   padding-top: 12px;
   padding-bottom: 12px;
-  /*transition: 0.3s;*/
   outline: none;
   color: #667085;
   letter-spacing: 0.5px;
@@ -527,7 +510,6 @@ input {
   background-color: #282c34;
   background: linear-gradient(0deg, rgba(40, 44, 52, 0.2) 0%, rgba(40, 44, 52, 0.2) 100%);
   box-shadow: 0 7px 20px 5px #00000088;
-  /*border-radius: 0.7rem;*/
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
   overflow: hidden;
@@ -535,13 +517,7 @@ input {
 }
 
 input:focus {
-  border: 1px solid #24405A;
-}
-
-.select-label{
-  margin-bottom: 2%;
-  margin-top: 2%;
-  font-size: 20px;
+  border: 1px solid #24405a;
 }
 
 .button {
@@ -550,31 +526,56 @@ input:focus {
   text-decoration: none;
   margin-top: 3%;
   border-radius: 5px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
 }
 
+
+
 .button-primary {
-  color: #FFFFFF;
-  background-color: #C30000;
-  border: 2px solid #C30000;
+  color: #ffffff;
+  background-color: #c30000;
+  border: 2px solid #c30000;
   transition: 0.5s all;
 }
 
-.button-primary:hover {
-  color: #C30000;
+.button-primary:hover:not(:disabled) {
+  color: #c30000;
   background-color: #ffffff;
   border: 2px solid #ffffff;
 }
 
-@media (max-width: 900px) {
+.button-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
-  .alpha{
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .alpha {
     display: block;
   }
 
-  .form{
+  .form {
     width: 85%;
     margin-left: auto;
     margin-right: auto;
@@ -582,35 +583,34 @@ input:focus {
     margin-bottom: 5%;
   }
 
-  .image-part{
+  .image-part {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
   }
-
 }
 
 @media (max-width: 825px) {
-  .register-image{
+  .register-image {
     width: 90%;
   }
 }
 
 @media (max-width: 500px) {
-  .image{
+  .image {
     width: 40%;
   }
 
-  .select-label{
+  .select-label {
     font-size: 18px;
   }
 
-  .header{
+  .header {
     margin-top: 10%;
     font-size: 30px;
   }
 
-  .part-1{
+  .part-1 {
     font-size: 16px;
   }
 
@@ -618,7 +618,7 @@ input:focus {
     padding-left: 5px;
   }
 
-  .section-1-header{
+  .section-1-header {
     font-size: 18px;
   }
 }

@@ -4,11 +4,8 @@
     <div class="section-1">
       <form class="form-alpha" @submit.prevent="sendMessage">
         <p class="text-1">Exclusive Connect Form</p>
-
         <p class="text-3">Effortlessly Join Our Network Through a Private, Members-Only Form</p>
-
         <p class="text-2"> Fee ( 510 )</p>
-
 
         <div class="space">
           <label>Applicant name</label>
@@ -47,37 +44,29 @@
 
         <div class="space">
           <label>Select preferred payment method</label>
-          <select v-model="paymentMethod" required="required"  class="form-input">
+          <select v-model="paymentMethod" required="required" class="form-input">
             <option value="Cash">Cash</option>
             <option value="Transfer">Transfer</option>
           </select>
         </div>
 
-
-        <!--          <p class="text-4">Click here to generate code :  {{randomString}}</p>-->
-
-        <!--          <p @click="generateRandomString" class="link-button-2">Generate</p>-->
-
-
-        <button class="link-button-3">Submit Request</button>
-
-
-
+        <button class="link-button-3" type="submit" :disabled="isLoading">
+          <span v-if="isLoading" class="spinner"></span>
+          {{ isLoading ? 'SENDING...' : 'Submit Request' }}
+        </button>
       </form>
 
       <div class="image-part">
         <img src="@/assets/home-couple.png" alt="" class="register-image"/>
-<!--        <button @click="sendEmail">click</button>-->
       </div>
     </div>
   </div>
 </template>
 
-
 <script>
-import {collection, doc, getDocs, setDoc} from "firebase/firestore";
-import {db} from "@/firebase/config";
-import {serverTimestamp} from "firebase/database";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { db } from "@/firebase/config";
+import { serverTimestamp } from "firebase/firestore";
 import Swal from "sweetalert2";
 import emailjs from 'emailjs-com';
 
@@ -97,7 +86,8 @@ export default {
       paymentMethod: "",
       randomString: "",
       history: [],
-    }
+      isLoading: false, // New reactive property for loading state
+    };
   },
 
   computed: {
@@ -108,59 +98,64 @@ export default {
 
   methods: {
     async sendMessage() {
-      await setDoc(doc(db, "ExclusiveConnectForm", this.email), {
-        applicantName: this.applicantName,
-        dateOfBirth: this.dateOfBirth,
-        nationality: this.nationality,
-        mobileNo: this.mobileNo,
-        email: this.email,
-        gender: this.gender,
-        agentName: this.agentName,
-        paymentMethod: this.paymentMethod,
-        createdAt: serverTimestamp(),
-      }, {merge: true})
-          .then(() => {
-            console.log('saved')
-          });
+      try {
+        this.isLoading = true; // Start loading
 
-      // EmailJS configuration
-      const templateParams = {
-        email: this.email,
-        subject: "Exclusive Connect Form",
-        companyName: "Match Connecting",
-        name: this.applicantName,
-        message:  `Dear ${this.applicantName},
+        // Firestore operation
+        await setDoc(doc(db, "ExclusiveConnectForm", this.email), {
+          applicantName: this.applicantName,
+          dateOfBirth: this.dateOfBirth,
+          nationality: this.nationality,
+          mobileNo: this.mobileNo,
+          email: this.email,
+          gender: this.gender,
+          agentName: this.agentName,
+          paymentMethod: this.paymentMethod,
+          createdAt: serverTimestamp(),
+        }, { merge: true });
+        console.log('saved');
 
-Thank you for taking the first step toward joining Match Connecting, the premier platform for cultivating meaningful, discreet, and purposeful relationships. We are delighted by your interest in our exclusive community, where discerning individuals and vibrant companions connect to form authentic, rewarding partnerships tailored to your unique lifestyle and preferences.
+        // EmailJS configuration
+        const templateParams = {
+          email: this.email,
+          subject: "Exclusive Connect Form",
+          companyName: "Match Connecting",
+          name: this.applicantName,
+          message: `Thank you for taking the first step toward joining Match Connecting, the premier platform for cultivating meaningful, discreet, and purposeful relationships. We are delighted by your interest in our exclusive community, where discerning individuals and vibrant companions connect to form authentic, rewarding partnerships tailored to your unique lifestyle and preferences.
 
-Your membership application has been successfully received and is now under meticulous review by our dedicated team. At Match Connecting, we are committed to upholding the highest standards of quality, discretion, and compatibility. Your assigned match agent, ${this.agentName}, will personally guide you through the next steps of the process, ensuring a seamless and personalized experience. The review process typically takes 24-48 hours, during which we carefully verify your details to ensure alignment with our core values of authenticity, respect, and mutual fulfillment.
+Your membership application has been successfully received and is now under review by our dedicated team. At Match Connecting, we are committed to upholding the highest standards of quality, discretion, and compatibility. Your assigned match agent, ${this.agentName}, will personally guide you through the next steps of the process, ensuring a seamless and personalized experience.
 
-Upon approval, you will receive your personalized Membership ID card, unlocking full access to our exclusive suite of premium features, designed to elevate your journey:
+Upon approval, you will receive your personalized Membership ID card. You enjoy features like:
 - Tailored Matchmaking: Precision-crafted connections based on your unique profile, interests, and aspirations—whether you seek companionship, adventure, or a deeper bond.
 - Confidential Networking: Secure private messaging, curated virtual events, and exclusive in-person gatherings for discreet, meaningful interactions.
 - Robust Privacy Protections: State-of-the-art security measures to safeguard your identity and ensure a trusted, enjoyable experience.
 - Premium Lifestyle Benefits: Access to bespoke travel recommendations, luxury experiences, and expert matchmaking guidance to enhance every facet of your journey.
 
-We are thrilled to welcome you to a community dedicated to #RealConnections and #DatingWithPurpose. While you await approval, we invite you to visit www.matchconnecting.com to explore inspiring success stories, expert tips for optimizing your profile, and insights into the art of modern matchmaking.
+We are thrilled to welcome you to a community dedicated to #RealConnections and #DatingWithPurpose Creating exclusiveness.
 
 Should you have any questions or require assistance, your match agent, ${this.agentName}, and our support team are available at support@matchconnecting.com.
 
 Thank you for choosing Match Connecting. We look forward to helping you forge the meaningful connections you deserve.`
-      };
+        };
 
-      emailjs.send('service_og8nelc', 'template_nhnuukb', templateParams, 'y1XAYDbFmTaxQCAUF')
-          .then((response) => {
-            console.log('Email sent successfully!', response.status, response.text);
-          }, (error) => {
-            console.log('Failed to send email:', error);
-          });
+        await emailjs.send('service_og8nelc', 'template_nhnuukb', templateParams, 'y1XAYDbFmTaxQCAUF');
 
-      await Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Request sent Successfully! A confirmation email has been sent to you.',
-      });
-      this.resetForm();
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Request sent Successfully! A confirmation email has been sent to you.',
+        });
+        this.resetForm();
+      } catch (error) {
+        console.error('Error sending request:', error);
+        await Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to send request. Please try again.',
+        });
+      } finally {
+        this.isLoading = false; // Stop loading regardless of success or failure
+      }
     },
 
     sendEmail() {
@@ -213,166 +208,49 @@ Thank you for choosing Match Connecting. We look forward to helping you forge th
     updateModalOpened() {
       this.$store.commit('updateIsModalOpened', true);
     },
-  },
 
-  async created() {
-    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));
-    querySnapshot2.forEach((doc) => {
-      let data = {
-        'code': doc.data().code,
-      }
-      this.history = data
-    })
-  },
+    async created() {
+      const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));
+      querySnapshot2.forEach((doc) => {
+        let data = {
+          'code': doc.data().code,
+        };
+        this.history = data;
+      });
+    },
 
-  async mounted() {
-    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));
-    querySnapshot2.forEach((doc) => {
-      let data = {
-        'code': doc.data().code,
-      }
-      this.history = data
-    })
+    async mounted() {
+      const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));
+      querySnapshot2.forEach((doc) => {
+        let data = {
+          'code': doc.data().code,
+        };
+        this.history = data;
+      });
+    }
   }
 }
 </script>
 
+<style scoped>
+h3 { margin: 40px 0 0; }
+ul { list-style-type: none; padding: 0; }
+li { display: inline-block; margin: 0 10px; }
 
-<!--<script>-->
-<!--import {collection, doc, getDocs, setDoc} from "firebase/firestore";-->
-<!--import {db} from "@/firebase/config";-->
-<!--import {serverTimestamp} from "firebase/database";-->
-<!--import Swal from "sweetalert2";-->
-
-<!--export default {-->
-<!--  name: "JoinNowView",-->
-<!--  emits: ['close'],-->
-<!--  data () {-->
-<!--    return {-->
-<!--      dialogIsVisible: false,-->
-<!--      applicantName: "",-->
-<!--      dateOfBirth: "",-->
-<!--      nationality: "",-->
-<!--      mobileNo: "",-->
-<!--      email: "",-->
-<!--      gender: "",-->
-<!--      paymentMethod: "",-->
-<!--      randomString: "",-->
-<!--      history: [],-->
-<!--    }-->
-<!--  },-->
-
-<!--  computed: {-->
-<!--    // Access state using a computed property-->
-<!--    count() {-->
-<!--      return this.$store.state.isModalOpened;-->
-<!--    },-->
-<!--  },-->
-
-<!--  methods: {-->
-<!--    async sendMessage() {-->
-
-<!--      await setDoc(doc(db,"ExclusiveConnectForm", this.email), {-->
-<!--        applicantName: this.applicantName,-->
-<!--        dateOfBirth: this.dateOfBirth,-->
-<!--        nationality: this.nationality,-->
-<!--        mobileNo: this.mobileNo,-->
-<!--        email: this.email,-->
-<!--        gender: this.gender,-->
-<!--        paymentMethod: this.paymentMethod,-->
-<!--        createdAt: serverTimestamp(),-->
-<!--      }, {merge: true})-->
-<!--          .then(() => {-->
-<!--            console.log('saved')-->
-<!--          })-->
-<!--      await Swal.fire({-->
-<!--        icon: 'success',-->
-<!--        title: 'Success',-->
-<!--        text: 'Request sent Successfully!',-->
-<!--      });-->
-<!--      this.resetForm()-->
-
-<!--    },-->
-
-<!--    resetForm() {-->
-<!--      this.applicantName = '';-->
-<!--      this.dateOfBirth = '';-->
-<!--      this.nationality = '';-->
-<!--      this.mobileNo = '';-->
-<!--      this.email = '';-->
-<!--      this.gender = '';-->
-<!--      this.paymentMethod = '';-->
-<!--    },-->
-
-<!--    async close() {-->
-<!--      await this.$emit('close');-->
-<!--    },-->
-<!--    showDialog() {-->
-<!--      this.dialogIsVisible = true;-->
-<!--    },-->
-<!--    hideDialog() {-->
-<!--      this.dialogIsVisible = false;-->
-<!--    },-->
-<!--    generateRandomString() {-->
-<!--      const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';-->
-<!--      let result = '';-->
-<!--      for (let i = 0; i < 10; i++) {-->
-<!--        const randomIndex = Math.floor(Math.random() * characters.length);-->
-<!--        result += characters.charAt(randomIndex);-->
-<!--      }-->
-<!--      this.randomString = result;-->
-<!--    },-->
-
-<!--    updateModalOpened() {-->
-<!--      this.$store.commit('updateIsModalOpened', true);-->
-<!--    },-->
-
-<!--  },-->
-
-<!--  async created() {-->
-<!--    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));-->
-<!--    querySnapshot2.forEach((doc) => {-->
-<!--      let data = {-->
-<!--        'code': doc.data().code,-->
-<!--      }-->
-<!--      this.history = data-->
-<!--    })-->
-
-<!--  },-->
-
-<!--  async mounted() {-->
-<!--    const querySnapshot2 = await getDocs(collection(db, "authenticationCode"));-->
-<!--    querySnapshot2.forEach((doc) => {-->
-<!--      let data = {-->
-<!--        'code': doc.data().code,-->
-<!--      }-->
-<!--      this.history = data-->
-<!--    })-->
-
-<!--  }-->
-<!--}-->
-<!--</script>-->
-
-
-<style scoped >
-h3 {margin: 40px 0 0; }
-ul {list-style-type: none; padding: 0; }
-li {display: inline-block; margin: 0 10px; }
-
-.space{
+.space {
   display: flex;
   flex-direction: column;
   text-align: left;
   margin-top: 2%;
 }
 
-.text-1{
+.text-1 {
   text-align: left;
   color: #8599a6;
   font-size: 26px;
 }
 
-.text-2{
+.text-2 {
   text-align: left;
   color: #8599a6;
   font-size: 17px;
@@ -380,7 +258,7 @@ li {display: inline-block; margin: 0 10px; }
   padding-bottom: 5px;
 }
 
-.text-3{
+.text-3 {
   text-align: left;
   color: #8599a6;
   font-size: 17px;
@@ -388,16 +266,12 @@ li {display: inline-block; margin: 0 10px; }
   padding-bottom: 5px;
 }
 
-.text-4{
+.text-4 {
   text-align: left;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 16px;
   padding-top: 5px;
   padding-bottom: 5px;
-  /*width: 80%;*/
-  /*display: block;*/
-  /*margin-right: auto;*/
-  /*margin-left: auto;*/
 }
 
 .backdrop {
@@ -410,7 +284,7 @@ li {display: inline-block; margin: 0 10px; }
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.alpha{
+.alpha {
   padding-top: 10px;
 }
 
@@ -421,24 +295,24 @@ li {display: inline-block; margin: 0 10px; }
   margin-right: auto;
 }
 
-.section-1{
+.section-1 {
   display: flex;
   align-items: center;
   align-content: center;
 }
 
-.image-part{
+.image-part {
   width: 50%;
   margin-left: auto;
   margin-right: auto;
 }
 
-.form-alpha{
+.form-alpha {
   width: 50%;
   margin-left: 5%;
 }
 
-.register-image{
+.register-image {
   width: 85%;
   display: block;
   margin-left: auto;
@@ -446,13 +320,12 @@ li {display: inline-block; margin: 0 10px; }
   margin-top: 5%;
 }
 
-.link-button-2{
+.link-button-2 {
   float: left;
-  background-color: #C30000;
-  border: 1px solid #C30000;
+  background-color: #c30000;
+  border: 1px solid #c30000;
   display: block;
   margin: auto;
-  /*display: inline-block;*/
   font-weight: 400;
   width: 130px;
   padding: 5px 20px;
@@ -463,19 +336,19 @@ li {display: inline-block; margin: 0 10px; }
   font-size: 0.875rem;
   height: 33px;
   line-height: 1.4;
-  border-radius:  5px;
+  border-radius: 5px;
   margin-top: 10px;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.link-button-3{
+.link-button-3 {
   float: right;
   margin-top: 5%;
-  background-color: #C30000;
-  border: 1px solid #C30000;
-  display: block;
-  /*margin: auto;*/
-  /*display: inline-block;*/
+  background-color: #c30000;
+  border: 1px solid #c30000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 400;
   width: 100%;
   padding: 5px 20px;
@@ -486,8 +359,35 @@ li {display: inline-block; margin: 0 10px; }
   font-size: 0.875rem;
   height: 44px;
   line-height: 1.4;
-  border-radius:  5px;
+  border-radius: 5px;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.link-button-3:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.link-button-3:hover:not(:disabled) {
+  background-color: #e60000;
+  border-color: #e60000;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 dialog {
@@ -517,40 +417,36 @@ dialog {
   background-color: rgba(0, 0, 0, 0.8);
   box-shadow: 0 0 34px 0 rgba(3, 28, 67, 0.13);
 }
+
 @keyframes modal {
   from {
     opacity: 0;
     transform: translateY(-50px) scale(0.9);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
 
-
-label{
+label {
   padding-bottom: 5px;
-  /*padding-top: 25px;*/
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
-.form-input{
+.form-input {
   border: 1px solid #e4e8ee;
-  border-radius: 5px ;
+  border-radius: 5px;
   height: 35px;
-  /*color: white;*/
   padding: 5px 20px;
   width: 100%;
 }
 
-.displayname{
-  background-color: #FFFFFF;
+.displayname {
+  background-color: #ffffff;
   border: 1px solid #e4e8ee;
-  border-radius: 5px ;
+  border-radius: 5px;
   height: 35px;
-  /*color: white;*/
   padding: 5px 20px;
   width: 100%;
 }
@@ -566,7 +462,6 @@ label{
   display: block;
   font-size: 16px;
   line-height: 24px;
-
   padding: 12px 16px;
   height: 48px;
   border-radius: 8px;
@@ -578,7 +473,7 @@ label{
 
 .form-group input:focus {
   outline: none;
-  border: 1px solid #24405A;
+  border: 1px solid #24405a;
 }
 
 .form-group input::placeholder {
@@ -603,7 +498,7 @@ label{
 
 .form-group select:focus {
   outline: none;
-  border: 1px solid #24405A;
+  border: 1px solid #24405a;
 }
 
 .form-group select::placeholder {
@@ -612,7 +507,7 @@ label{
   font-size: 14px;
 }
 
-.id{
+.id {
   font-size: 16px;
   text-align: left;
 }
@@ -629,52 +524,43 @@ label{
     right: 30px;
     left: calc(50% - 12.5rem);
   }
-  p{
+  p {
     font-size: unset;
   }
-  .id{
+  .id {
     margin-left: unset;
     padding-left: unset;
   }
-  .text-1{
+  .text-1 {
     font-size: 22px;
   }
-
-  .text-2{
+  .text-2 {
     font-size: 15px;
     padding-top: 3px;
     padding-bottom: 3px;
   }
-
-  .text-3{
-    /*font-size: 13px;*/
+  .text-3 {
     padding-top: 3px;
     padding-bottom: 3px;
     width: 90%;
   }
-
-
-  .section-1{
+  .section-1 {
     display: block;
   }
-
-  .image-part{
+  .image-part {
     display: none;
   }
-
-  .form-alpha{
+  .form-alpha {
     width: 95%;
     display: block;
     margin-left: auto;
     margin-right: auto;
   }
-
   .logo {
     width: 30%;
     display: block;
     margin-left: auto;
     margin-right: auto;
   }
-
 }
 </style>

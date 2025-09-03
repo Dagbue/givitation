@@ -21,7 +21,6 @@
               <span>US</span>
             </div>
             <div class="app-contact">EMAIL : support@matchconnecting.com</div>
-
             <a href="https://t.me/officialservicelove" class="app-contact">TELEGRAM : https://t.me/officialservicelove</a>
           </div>
           <div class="screen-body-item">
@@ -30,17 +29,20 @@
                 <input class="app-form-control" placeholder="NAME" type="text" required v-model="name" />
               </div>
               <div class="app-form-group">
-                <input class="app-form-control" placeholder="EMAIL" type="email" required v-model="email"  />
+                <input class="app-form-control" placeholder="EMAIL" type="email" required v-model="email" />
               </div>
               <div class="app-form-group">
                 <input class="app-form-control" placeholder="CONTACT NO" type="number" required v-model="number" />
               </div>
               <div class="app-form-group message">
-                <input class="app-form-control" placeholder="MESSAGE" type="text" required v-model="message"/>
+                <input class="app-form-control" placeholder="MESSAGE" type="text" required v-model="message" />
               </div>
               <div class="app-form-group buttons">
                 <button class="app-form-button" @click="resetForm">CANCEL</button>
-                <button class="app-form-button" @click="sendMessage">SEND</button>
+                <button class="app-form-button" @click="sendMessage" :disabled="isLoading">
+                  <span v-if="isLoading" class="spinner"></span>
+                  {{ isLoading ? 'SENDING...' : 'SEND' }}
+                </button>
               </div>
             </div>
           </div>
@@ -49,18 +51,17 @@
     </div>
 
     <div class="maps">
-
       <iframe width="100%" height="700" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="gmap_canvas" src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=15%20Carrington%20St,%20Sydney%20NSW%202000,%20Australia%20Sydney+(Givitation)&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
-
     </div>
   </div>
 </template>
 
 <script>
-import { serverTimestamp,} from "firebase/database";
-import {db} from "@/firebase/config";
-import {doc, setDoc,} from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
+import { db } from "@/firebase/config";
+import { doc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
+
 export default {
   name: "ContactBody",
   data() {
@@ -69,51 +70,61 @@ export default {
       email: "",
       number: "",
       message: "",
+      isLoading: false, // New reactive property for loading state
     };
   },
   methods: {
     async sendMessage() {
-      // noinspection JSUnresolvedFunction,JSCheckFunctionSignatures
-      await setDoc(doc(db,"SupportRequest", this.email), {
-        name: this.name,
-        email: this.email,
-        number: this.number,
-        message: this.message,
-        createdAt: serverTimestamp(),
-      }, {merge: true})
-          .then(() => {
-            console.log('saved')
-          })
-      await Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Message sent Successfully!',
-      });
-      this.resetForm()
+      try {
+        this.isLoading = true; // Start loading
+        await setDoc(
+            doc(db, "SupportRequest", this.email),
+            {
+              name: this.name,
+              email: this.email,
+              number: this.number,
+              message: this.message,
+              createdAt: serverTimestamp(),
+            },
+            { merge: true }
+        );
+        console.log("saved");
+        await Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Message sent Successfully!",
+        });
+        this.resetForm();
+      } catch (error) {
+        console.error("Error sending message:", error);
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to send message. Please try again.",
+        });
+      } finally {
+        this.isLoading = false; // Stop loading regardless of success or failure
+      }
     },
 
     resetForm() {
-      this.name = '';
-      this.email = '';
-      this.message = '';
-      this.number = '';
+      this.name = "";
+      this.email = "";
+      this.message = "";
+      this.number = "";
     },
-
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-
-
- button, input {
+button,
+input {
   font-weight: 700;
   letter-spacing: 1.4px;
 }
 
 .background {
-  /*display: flex;*/
-  /*min-height: 80vh;*/
   margin-left: 2%;
   margin-right: 2%;
   margin-top: 6%;
@@ -133,7 +144,7 @@ export default {
 }
 
 .screen:after {
-  content: '';
+  content: "";
   display: block;
   position: absolute;
   top: 0;
@@ -141,7 +152,7 @@ export default {
   right: 20px;
   bottom: 0;
   border-radius: 15px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, .4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
   z-index: -1;
 }
 
@@ -168,7 +179,7 @@ export default {
 }
 
 .screen-header-button.close {
-  background: #C30000;
+  background: #c30000;
 }
 
 .screen-header-button.maximize {
@@ -209,19 +220,19 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  color: #C30000;
+  color: #c30000;
   font-size: 26px;
 }
 
 .app-title:after {
-  content: '';
+  content: "";
   display: block;
   position: absolute;
   left: 0;
   bottom: -10px;
   width: 25px;
   height: 4px;
-  background: #C30000;
+  background: #c30000;
 }
 
 .app-contact {
@@ -254,7 +265,7 @@ export default {
   font-size: 14px;
   text-transform: uppercase;
   outline: none;
-  transition: border-color .2s;
+  transition: border-color 0.2s;
 }
 
 .app-form-control::placeholder {
@@ -268,15 +279,40 @@ export default {
 .app-form-button {
   background: none;
   border: none;
-  color: #C30000;
+  color: #c30000;
   font-size: 14px;
   cursor: pointer;
   outline: none;
   margin-right: 10px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.app-form-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .app-form-button:hover {
-  color: #C30000;
+  color: #e60000; /* Slightly lighter red for hover */
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #c30000;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .credits {
@@ -303,7 +339,7 @@ export default {
   margin: 0 5px;
 }
 
-.maps{
+.maps {
   margin-left: 2%;
   margin-right: 2%;
   margin-top: 7%;

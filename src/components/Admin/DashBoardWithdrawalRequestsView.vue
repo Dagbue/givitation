@@ -11,10 +11,8 @@
           <div class="action-content">
             <img src="@/assets/Filterslines.svg" alt="Filter"/>
             <select v-model="sortOption" @change="sortItems" class="filter-select">
-              <option value="applicantName-asc">Applicant Name (Ascending)</option>
-              <option value="applicantName-desc">Applicant Name (Descending)</option>
-              <option value="email-asc">Email (Ascending)</option>
-              <option value="email-desc">Email (Descending)</option>
+              <option value="createdAt-asc">Date Created (Ascending)</option>
+              <option value="createdAt-desc">Date Created (Descending)</option>
             </select>
           </div>
         </div>
@@ -36,6 +34,7 @@
             <th>Email</th>
             <th>Gender</th>
             <th>Payment Method</th>
+            <th>Created At</th>
           </tr>
           <tbody v-for="child in paginatedItems" :key="child.email">
           <tr>
@@ -46,6 +45,7 @@
             <td>{{child.email}}</td>
             <td>{{child.gender}}</td>
             <td>{{child.paymentMethod}}</td>
+            <td>{{formatDate(child.createdAt)}}</td>
           </tr>
           </tbody>
         </table>
@@ -86,7 +86,7 @@ export default {
       itemsPerPage: 10,
       selectEmail: "",
       searchQuery: "",
-      sortOption: "applicantName-asc",
+      sortOption: "createdAt-desc", // Default to newest first
     };
   },
   computed: {
@@ -103,13 +103,13 @@ export default {
     sortedItems() {
       const [field, order] = this.sortOption.split("-");
       return [...this.history].sort((a, b) => {
-        const valA = a[field].toLowerCase();
-        const valB = b[field].toLowerCase();
-        if (order === "asc") {
-          return valA < valB ? -1 : valA > valB ? 1 : 0;
-        } else {
-          return valA > valB ? -1 : valA < valB ? 1 : 0;
+        if (field === "createdAt") {
+          // Handle date sorting
+          const dateA = a[field] instanceof Date ? a[field] : new Date(0);
+          const dateB = b[field] instanceof Date ? b[field] : new Date(0);
+          return order === "asc" ? dateA - dateB : dateB - dateA;
         }
+        return 0; // Only createdAt sorting is supported
       });
     },
     paginatedItems() {
@@ -171,6 +171,36 @@ export default {
         });
       }
     },
+    formatDate(timestamp) {
+      if (!timestamp) return '';
+      const date = timestamp instanceof Date ? timestamp : new Date(0);
+      return date.toLocaleString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+    },
+    convertToDate(createdAt) {
+      if (!createdAt) return null;
+      // Handle Firestore Timestamp object
+      if (typeof createdAt.toDate === 'function') {
+        return createdAt.toDate();
+      }
+      // Handle object with seconds and nanoseconds
+      if (createdAt && typeof createdAt === 'object' && 'seconds' in createdAt) {
+        return new Date(createdAt.seconds * 1000 + Math.floor(createdAt.nanoseconds / 1000000));
+      }
+      // Handle string timestamp (ISO or other formats)
+      if (typeof createdAt === 'string') {
+        const parsedDate = new Date(createdAt);
+        return isNaN(parsedDate.getTime()) ? null : parsedDate;
+      }
+      return null;
+    }
   },
   async created() {
     const querySnapshot = await getDocs(collection(db, "ExclusiveConnectForm"));
@@ -183,6 +213,7 @@ export default {
         email: doc.data().email,
         gender: doc.data().gender,
         paymentMethod: doc.data().paymentMethod,
+        createdAt: this.convertToDate(doc.data().createdAt) // Convert using helper method
       };
       this.history.push(data);
     });
