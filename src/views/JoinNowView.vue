@@ -36,6 +36,11 @@
         </div>
 
         <div class="space">
+          <label>Match Connecting Agent</label>
+          <input type="text" v-model="agentName" required="required" placeholder="Enter Agent's Name" class="form-input"/>
+        </div>
+
+        <div class="space">
           <label>Gender</label>
           <input type="text" v-model="gender" required="required" placeholder="Enter Gender" class="form-input"/>
         </div>
@@ -88,6 +93,7 @@ export default {
       mobileNo: "",
       email: "",
       gender: "",
+      agentName: "",
       paymentMethod: "",
       randomString: "",
       history: [],
@@ -109,6 +115,7 @@ export default {
         mobileNo: this.mobileNo,
         email: this.email,
         gender: this.gender,
+        agentName: this.agentName,
         paymentMethod: this.paymentMethod,
         createdAt: serverTimestamp(),
       }, {merge: true})
@@ -122,23 +129,23 @@ export default {
         subject: "Exclusive Connect Form",
         companyName: "Match Connecting",
         name: this.applicantName,
-        message: `Dear ${this.applicantName},
+        message:  `Dear ${this.applicantName},
 
-Thank you for taking the exciting step toward joining Match Connecting, your premier destination for forging meaningful, discreet, and purposeful connections. We truly appreciate your interest in our exclusive community, where affluent individuals and vibrant companions come together to build rewarding relationships tailored to your unique preferences and lifestyle.
+Thank you for taking the first step toward joining Match Connecting, the premier platform for cultivating meaningful, discreet, and purposeful relationships. We are delighted by your interest in our exclusive community, where discerning individuals and vibrant companions connect to form authentic, rewarding partnerships tailored to your unique lifestyle and preferences.
 
-Your membership application has been successfully submitted and is now under careful review by our dedicated team. At Match Connecting, we prioritize quality, discretion, and compatibility above all else—ensuring that every member aligns with our values of authenticity, respect, and mutual fulfillment. This process typically takes 24-48 hours, during which we'll verify your details to maintain the high standards that define our platform.
+Your membership application has been successfully received and is now under meticulous review by our dedicated team. At Match Connecting, we are committed to upholding the highest standards of quality, discretion, and compatibility. Your assigned match agent, ${this.agentName}, will personally guide you through the next steps of the process, ensuring a seamless and personalized experience. The review process typically takes 24-48 hours, during which we carefully verify your details to ensure alignment with our core values of authenticity, respect, and mutual fulfillment.
 
-Once approved, you'll receive your personalized Membership ID card, granting you full access to our suite of premium features. Imagine unlocking a world of:
-- **Curated Matches**: Handpicked connections based on your profile, interests, and desires, whether you're seeking companionship, adventure, or something more profound.
-- **Discreet Networking**: Private messaging, virtual events, and exclusive gatherings designed for seamless, confidential interactions—no matter your relationship status.
-- **Enhanced Security**: Advanced privacy tools to protect your identity and ensure a safe, enjoyable experience.
-- **Lifestyle Perks**: From travel tips and luxury recommendations to personalized matchmaking advice, we're here to elevate your journey.
+Upon approval, you will receive your personalized Membership ID card, unlocking full access to our exclusive suite of premium features, designed to elevate your journey:
+- Tailored Matchmaking: Precision-crafted connections based on your unique profile, interests, and aspirations—whether you seek companionship, adventure, or a deeper bond.
+- Confidential Networking: Secure private messaging, curated virtual events, and exclusive in-person gatherings for discreet, meaningful interactions.
+- Robust Privacy Protections: State-of-the-art security measures to safeguard your identity and ensure a trusted, enjoyable experience.
+- Premium Lifestyle Benefits: Access to bespoke travel recommendations, luxury experiences, and expert matchmaking guidance to enhance every facet of your journey.
 
-We're thrilled to welcome you into a network that's all about #RealConnections and #DatingWithPurpose. In the meantime, feel free to explore our website at www.matchconnecting.com for inspiring stories, tips on crafting the perfect profile, and insights into the vibrant world of modern matchmaking.
+We are thrilled to welcome you to a community dedicated to #RealConnections and #DatingWithPurpose. While you await approval, we invite you to visit www.matchconnecting.com to explore inspiring success stories, expert tips for optimizing your profile, and insights into the art of modern matchmaking.
 
-For your records, your application reference is Ticket ID #6. If you have any questions or need assistance, our support team is just an email away at support@matchconnecting.com.
+Should you have any questions or require assistance, your match agent, ${this.agentName}, and our support team are available at support@matchconnecting.com.
 
-We look forward to helping you discover the connections you have been seeking.`
+Thank you for choosing Match Connecting. We look forward to helping you forge the meaningful connections you deserve.`
       };
 
       emailjs.send('service_og8nelc', 'template_nhnuukb', templateParams, 'y1XAYDbFmTaxQCAUF')
@@ -180,6 +187,7 @@ We look forward to helping you discover the connections you have been seeking.`
       this.mobileNo = '';
       this.email = '';
       this.gender = '';
+      this.agentName = '';
       this.paymentMethod = '';
     },
 
