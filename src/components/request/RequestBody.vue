@@ -1,7 +1,6 @@
 <template>
   <div class="alpha">
     <div class="form">
-      <div class="elfsight-app-03a638d1-be42-4a0d-9427-daf0462a83da" data-elfsight-app-lazy></div>
       <p class="header">Find you a Match</p>
       <form @submit.prevent="sendMessage">
         <div class="section-1">
