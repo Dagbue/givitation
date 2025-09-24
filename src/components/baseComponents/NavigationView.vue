@@ -16,6 +16,7 @@
           <li class="link"><router-link  to="/testimony" class="link-2">TESTIMONIES</router-link></li>
           <li class="link"><router-link  to="/contact" class="link-2">CONTACT</router-link></li>
           <li class="link"><router-link  to="/request" class="link-2">REQUEST</router-link></li>
+          <li class="link"><router-link  to="/forum" class="link-2">FORUM</router-link></li>
 <!--          <li @click="showDialog2" class="link"><router-link  to="" class="auth">JOIN NOW</router-link></li>-->
 <!--          <li class="link"><router-link  to="/login" class="auth">LOGIN</router-link></li>-->
         </ul>
@@ -31,6 +32,7 @@
             <li @click="toggleMobileNav2"><router-link  to="/testimony" >TESTIMONIES</router-link></li>
             <li @click="toggleMobileNav2"><router-link  to="/contact" >CONTACT</router-link></li>
             <li @click="toggleMobileNav2"><router-link  to="/request" >REQUEST</router-link></li>
+            <li @click="toggleMobileNav2"><router-link  to="/forum" >FORUM</router-link></li>
 <!--            <li @click="showDialog3"><router-link  to="" >JOIN NOW</router-link></li>-->
 <!--            <li @click="toggleMobileNav2"><router-link  to="/login" >LOGIN</router-link></li>-->
           </ul>
