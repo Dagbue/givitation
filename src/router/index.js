@@ -27,11 +27,7 @@ const routes = [
     name: 'request',
     component: () => import(/* webpackChunkName: "about" */ '../views/RequestView.vue')
   },
-  {
-    path: '/forum',
-    name: 'forum',
-    component: () => import(/* webpackChunkName: "about" */ '../views/ForumView.vue')
-  },
+
 
   {
     path: '/joinNowView',
@@ -39,6 +35,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/JoinNowView.vue'),
     meta: { hideNavigation: true },
   },
+
+  {
+    path: '/profileView',
+    name: 'profileView',
+    component: () => import(/* webpackChunkName: "about" */ '../views/ProfileView.vue'),
+    meta: { hideNavigation: true },
+  },
+
+  {
+    path: '/viewProfile',
+    name: 'viewProfile',
+    component: () => import(/* webpackChunkName: "about" */ '../views/ProfileView2.vue'),
+    meta: { hideNavigation: true },
+  },
+
 
   {
     path: '/admin',
@@ -110,6 +121,13 @@ const routes = [
         component: () =>
             import(/* webpackChunkName: "ChangePasswordAdmin" */ "../views/Admin/AddNewUser.vue"),
         meta: { hideNavigation: true }
+      },
+
+      {
+        path: '/createProfileView',
+        name: 'createProfileView',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Admin/CreateProfileView.vue'),
+        meta: { hideNavigation: true },
       },
     ]
   },

@@ -47,6 +47,15 @@
           </li>
         </router-link>
 
+        <router-link to="/createProfileView">
+          <li>
+            <a class="hover">
+              <img src="../../assets/pie-chart.svg" alt="logo" class="link-img" />
+              <span class="links-name">Create Profile</span>
+            </a>
+          </li>
+        </router-link>
+
 <!--        <router-link to="">-->
 <!--          <li>-->
 <!--            <a class="hover">-->
@@ -139,12 +148,12 @@
                   <router-link to="/deposit-requests" class="">Generate Code</router-link>
                 </a>
               </li>
-<!--              <li @click="toggleMobileNav2">-->
-<!--                <a>-->
-<!--                  <i class='bx bx-line-chart' ></i>-->
-<!--                  <router-link to="/roihistory" class="">ROI History</router-link>-->
-<!--                </a>-->
-<!--              </li>-->
+              <li @click="toggleMobileNav2">
+                <a>
+                  <i class='bx bx-line-chart' ></i>
+                  <router-link to="/createProfileView" class="">Create Profile</router-link>
+                </a>
+              </li>
 <!--              <li @click="toggleMobileNav2">-->
 <!--                <a>-->
 <!--                  <i class='bx bxs-briefcase' ></i>-->
