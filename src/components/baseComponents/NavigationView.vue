@@ -16,9 +16,9 @@
           <li class="link"><router-link  to="/testimony" class="link-2">TESTIMONIES</router-link></li>
           <li class="link"><router-link  to="/contact" class="link-2">CONTACT</router-link></li>
           <li class="link"><router-link  to="/request" class="link-2">REQUEST</router-link></li>
-<!--          <a  href="https://forum-matchconnecting.netlify.app/">-->
-<!--          <li class="link link-2" style="padding-left: 5px;padding-right: 5px">FORUM</li>-->
-<!--          </a>-->
+          <a  href="https://forum-matchconnecting.netlify.app/">
+          <li class="link link-2" style="padding-left: 5px;padding-right: 5px">FORUM</li>
+          </a>
 
         </ul>
 
@@ -33,7 +33,7 @@
             <li @click="toggleMobileNav2"><router-link  to="/testimony" >TESTIMONIES</router-link></li>
             <li @click="toggleMobileNav2"><router-link  to="/contact" >CONTACT</router-link></li>
             <li @click="toggleMobileNav2"><router-link  to="/request" >REQUEST</router-link></li>
-<!--            <li @click="toggleMobileNav3"><router-link  to="" >FORUM</router-link></li>-->
+            <li @click="toggleMobileNav3"><router-link  to="" >FORUM</router-link></li>
 
           </ul>
 
