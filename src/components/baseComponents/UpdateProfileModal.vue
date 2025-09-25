@@ -4,14 +4,14 @@
     <dialog open>
       <div class="welcome-modal">
         <p style="float: right; color: #FFFFFF;" @click="emitClose">x</p>
-        <form @submit.prevent="createProfile">
-          <p class="text-1">Create Profile</p>
+        <form @submit.prevent="updateProfile">
+          <p class="text-1">Update Profile</p>
 
           <div class="seprate">
             <div class="space">
               <label>First Name</label>
               <input type="text" v-model="firstName" placeholder="Enter First Name" class="form-input" />
-              18            </div>
+            </div>
 
             <div class="space">
               <label>Last Name</label>
@@ -31,9 +31,19 @@
             </div>
           </div>
 
-          <div class="space">
-            <label>Nationality</label>
-            <input type="text" v-model="nationality" placeholder="Enter Nationality" class="form-input" />
+          <div class="seprate">
+            <div class="space">
+              <label>Nationality</label>
+              <input type="text" v-model="nationality" placeholder="Enter Nationality" class="form-input" />
+            </div>
+
+            <div class="space">
+              <label>Status</label>
+              <select v-model="status" class="form-input" required>
+                <option value="active">Active</option>
+                <option value="inActive">Inactive</option>
+              </select>
+            </div>
           </div>
 
           <div class="space">
@@ -60,7 +70,7 @@
 
           <button class="link-button-3" type="submit" :disabled="isLoading">
             <span v-if="isLoading" class="spinner"></span>
-            {{ isLoading ? 'CREATING...' : 'Create' }}
+            {{ isLoading ? 'UPDATING...' : 'Update' }}
           </button>
         </form>
       </div>
@@ -72,11 +82,17 @@
 import Swal from "sweetalert2";
 import { serverTimestamp } from "firebase/firestore";
 import { db } from "@/firebase/config";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 export default {
-  name: "CreateProfileModal",
+  name: "UpdateProfileModal",
   emits: ['close'],
+  props: {
+    selectedProfile: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
       firstName: "",
@@ -84,6 +100,7 @@ export default {
       email: "",
       dob: "",
       nationality: "",
+      status: "",
       meetups: null,
       amountReceived: null,
       allowance: null,
@@ -92,16 +109,29 @@ export default {
       isLoading: false,
     };
   },
-  methods: {
-    generateUniqueId() {
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let randomPart = '';
-      for (let i = 0; i < 7; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        randomPart += characters[randomIndex];
-      }
-      return `MC-${randomPart}`;
+  watch: {
+    selectedProfile: {
+      immediate: true,
+      handler(newProfile) {
+        if (newProfile) {
+          this.firstName = newProfile.firstName || "";
+          this.lastName = newProfile.lastName || "";
+          this.email = newProfile.email || "";
+          this.dob = newProfile.dob || "";
+          this.nationality = newProfile.nationality || "";
+          this.status = newProfile.status || "inActive";
+          this.meetups = newProfile.meetups ?? 0;
+          this.amountReceived = newProfile.amountReceived ?? 0;
+          this.allowance = newProfile.allowance ?? 0;
+          this.imageBase64 = newProfile.image || "";
+          this.uniqueId = newProfile.uniqueId || "";
+        } else {
+          this.resetForm();
+        }
+      },
     },
+  },
+  methods: {
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file) {
@@ -114,41 +144,45 @@ export default {
         this.imageBase64 = "";
       }
     },
-    async createProfile() {
+    async updateProfile() {
+      if (!this.email) {
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Profile email is missing.",
+        });
+        return;
+      }
       try {
         this.isLoading = true;
-        this.uniqueId = this.generateUniqueId();
-        await setDoc(
-            doc(db, "Profiles", this.email || `profile-${this.uniqueId}`),
-            {
-              uniqueId: this.uniqueId,
-              firstName: this.firstName || "",
-              lastName: this.lastName || "",
-              email: this.email || "",
-              dob: this.dob || "",
-              nationality: this.nationality || "",
-              meetups: this.meetups ?? 0,
-              amountReceived: this.amountReceived ?? 0,
-              allowance: this.allowance ?? 0,
-              image: this.imageBase64 || "",
-              status: 'inActive',
-              createdAt: serverTimestamp(),
-            },
-            { merge: true }
-        );
+        const docRef = doc(db, "Profiles", this.email);
+        await updateDoc(docRef, {
+          firstName: this.firstName || "",
+          lastName: this.lastName || "",
+          email: this.email,
+          dob: this.dob || "",
+          nationality: this.nationality || "",
+          status: this.status || "inActive",
+          meetups: this.meetups ?? 0,
+          amountReceived: this.amountReceived ?? 0,
+          allowance: this.allowance ?? 0,
+          image: this.imageBase64 || "",
+          uniqueId: this.uniqueId,
+          updatedAt: serverTimestamp(),
+        });
         await Swal.fire({
           icon: "success",
           title: "Success",
-          text: "Profile created successfully!",
+          text: "Profile updated successfully!",
         });
         this.resetForm();
         this.$emit('close');
       } catch (error) {
-        console.error("Error creating profile:", error);
+        console.error("Error updating profile:", error);
         await Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Failed to create profile. Please try again.",
+          text: "Failed to update profile. Please try again.",
         });
       } finally {
         this.isLoading = false;
@@ -163,6 +197,7 @@ export default {
       this.email = "";
       this.dob = "";
       this.nationality = "";
+      this.status = "";
       this.meetups = null;
       this.amountReceived = null;
       this.allowance = null;
@@ -277,8 +312,8 @@ div {
 .link-button-3 {
   float: right;
   margin-top: 5%;
-  background-color: #C30000;
-  border: 1px solid #C30000;
+  background-color: #4CAF50;
+  border: 1px solid #4CAF50;
   display: block;
   font-weight: 400;
   width: 100%;
@@ -292,6 +327,11 @@ div {
   line-height: 1.4;
   border-radius: 5px;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.link-button-3:hover {
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  color: #4CAF50;
 }
 dialog {
   position: fixed;

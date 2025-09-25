@@ -21,7 +21,7 @@
                   :alt="`${profile.firstName} ${profile.lastName}`"
                   class="profile-image"
               />
-              <div :class="['verification-badge', { 'unverified': profile.status === 'inActive' }]">
+              <div :class="['verification-badge', { 'inActive': profile.status === 'inActive' }]">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
@@ -45,8 +45,8 @@
             <p class="profile-age-location">{{ age }} • {{ profile.nationality }}</p>
 
             <div class="profile-badges">
-              <span :class="['badge', { 'verified': profile.status === 'active', 'unverified': profile.status === 'inActive' }]">
-                {{ profile.status === 'active' ? 'Verified' : 'Unverified' }}
+              <span :class="['badge', { 'active': profile.status === 'active', 'inActive': profile.status === 'inActive' }]">
+                {{ profile.status === 'active' ? 'Active' : 'Inactive' }}
               </span>
               <span class="badge premium">Premium Member</span>
             </div>
@@ -489,10 +489,16 @@ export default {
   letter-spacing: 0.5px;
 }
 
-.badge.verified {
+.badge.active {
   background: rgba(16, 185, 129, 0.2);
   color: #10b981;
   border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge.inActive {
+  background: rgba(255, 193, 7, 0.2);
+  color: #FFC107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
 }
 
 .badge.premium {

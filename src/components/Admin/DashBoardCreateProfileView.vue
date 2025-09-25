@@ -1,6 +1,7 @@
 <template>
   <div class="alpha">
     <create-profile-modal @close="hideDialog" v-if="dialogIsVisible === true" />
+    <update-profile-modal @close="hideDialog2" v-if="dialogIsVisible2 === true" :selected-profile="selectedProfile" />
     <div class="body">
       <h2>Profiles</h2>
       <div class="row trans-mgt">
@@ -40,6 +41,7 @@
             <th>Image</th>
             <th>Status</th>
             <th>Created At</th>
+            <th>Actions</th>
           </tr>
           <tbody v-for="child in paginatedItems" :key="child.email">
           <tr>
@@ -56,6 +58,9 @@
             </td>
             <td>{{child.status}}</td>
             <td>{{formatDate(child.createdAt)}}</td>
+            <td>
+              <button class=" btn-update" @click="openUpdateModal(child)">Edit</button>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -66,7 +71,9 @@
           </div>
           <button @click="nextPage" :disabled="currentPage === totalPages" class="previous">Next</button>
         </div>
-        <form @submit.prevent="updateStatus">
+        <form
+            style="display: none;"
+            @submit.prevent="updateStatus">
           <div class="fields-alpha-2">
             <label class="fields-alpha-2-label">Select Email</label>
             <div>
@@ -107,10 +114,11 @@ import { collection, getDocs, doc, updateDoc, deleteDoc, getFirestore } from "fi
 import { db } from "@/firebase/config";
 import Swal from "sweetalert2";
 import CreateProfileModal from "@/components/baseComponents/CreateProfileModal.vue";
+import UpdateProfileModal from "@/components/baseComponents/UpdateProfileModal.vue";
 
 export default {
   name: "DashBoardCreateProfileView",
-  components: { CreateProfileModal },
+  components: { UpdateProfileModal, CreateProfileModal },
   data() {
     return {
       history: [],
@@ -122,6 +130,8 @@ export default {
       searchQuery: "",
       sortOption: "createdAt-desc",
       dialogIsVisible: false,
+      dialogIsVisible2: false,
+      selectedProfile: null,
     };
   },
   computed: {
@@ -162,8 +172,16 @@ export default {
     showDialog() {
       this.dialogIsVisible = true;
     },
+    showDialog2() {
+      this.dialogIsVisible2 = true;
+    },
     async hideDialog() {
       this.dialogIsVisible = false;
+      await this.fetchProfiles();
+    },
+    async hideDialog2() {
+      this.dialogIsVisible2 = false;
+      this.selectedProfile = null;
       await this.fetchProfiles();
     },
     async fetchProfiles() {
@@ -186,6 +204,10 @@ export default {
         };
         this.history.push(data);
       });
+    },
+    openUpdateModal(profile) {
+      this.selectedProfile = profile;
+      this.showDialog2();
     },
     previousPage() {
       if (this.currentPage > 1) {
@@ -495,10 +517,13 @@ td {
 .btn-update {
   background-color: #4CAF50;
   border: 1px solid #4CAF50;
+  color: #FFFFFF;
+  padding: 4px 25px;
+  border-radius: 15px;
 }
 .btn-update:hover {
   background-color: #ffffff;
-  border: 1px solid #ffffff;
+  border: 1px solid #4CAF50;
   color: #4CAF50;
 }
 select {
@@ -520,5 +545,4 @@ select {
   border-radius: 5px;
   transition: all 0.3s ease-in;
 }
-
 </style>
