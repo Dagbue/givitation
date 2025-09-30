@@ -22,7 +22,7 @@
           <div class="seprate">
             <div class="space">
               <label>Email</label>
-              <input type="email" v-model="email" placeholder="Enter Email" class="form-input" />
+              <input type="email" v-model="email" required placeholder="Enter Email" class="form-input" />
             </div>
 
             <div class="space">
