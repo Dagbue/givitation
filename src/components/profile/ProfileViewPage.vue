@@ -117,6 +117,10 @@
               </svg>
               Add to Favorites
             </button>
+
+            <button @click="openWithdrawalModal" class="btn btn-secondary detail-item premium-item">
+              Withdrawal
+            </button>
           </div>
         </div>
       </div>
@@ -135,6 +139,91 @@
         </p>
       </div>
     </div>
+
+    <!-- Withdrawal Modal -->
+    <div v-if="showWithdrawalModal" class="modal-overlay" @click="closeWithdrawalModal">
+      <div class="modal-content" @click.stop>
+        <button class="modal-close" @click="closeWithdrawalModal">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+
+
+        <div v-if="!withdrawalId" class="modal-body">
+
+          <div class="modal-header">
+            <svg class="modal-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+            </svg>
+            <h2 class="modal-title">Withdrawal Request</h2>
+          </div>
+
+          <p class="modal-description">
+            Enter the amount you would like to withdraw from your account.
+          </p>
+
+          <div class="form-group">
+            <label for="amount" class="form-label">Withdrawal Amount</label>
+            <div class="input-wrapper">
+              <span class="input-prefix">$</span>
+              <input
+                  id="amount"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  v-model="withdrawalAmount"
+                  placeholder="0.00"
+                  class="form-input"
+              />
+            </div>
+          </div>
+
+          <button @click="handleWithdrawalSubmit" class="btn btn-primary modal-submit">
+            Submit Request
+          </button>
+        </div>
+
+        <div v-else class="modal-body">
+          <div class="success-message">
+            <svg class="success-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <h3 class="success-title">Withdrawal Request Generated</h3>
+          </div>
+
+          <div class="withdrawal-details">
+            <div class="detail-row">
+              <span class="detail-label">Amount:</span>
+              <span class="detail-value">${{ formatWithdrawalAmount(withdrawalAmount) }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Profile ID:</span>
+              <span class="detail-value">{{ profile.uniqueId }}</span>
+            </div>
+            <div class="detail-row highlight">
+              <span class="detail-label">Withdrawal ID:</span>
+              <span class="detail-value">{{ withdrawalId }}</span>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <p class="info-text">
+              Please send an email to <strong>support@matchconnecting.com</strong> with the following information:
+            </p>
+            <ul class="info-list">
+              <li>Withdrawal Amount: <strong>${{ formatWithdrawalAmount(withdrawalAmount) }}</strong></li>
+              <li>Profile ID: <strong>{{ profile.uniqueId }}</strong></li>
+              <li>Withdrawal ID: <strong>{{ withdrawalId }}</strong></li>
+            </ul>
+          </div>
+
+          <button @click="closeWithdrawalModal" class="btn btn-primary modal-submit">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -148,6 +237,9 @@ export default {
   data() {
     return {
       profile: null,
+      showWithdrawalModal: false,
+      withdrawalAmount: '',
+      withdrawalId: '',
     };
   },
   computed: {
@@ -167,7 +259,7 @@ export default {
   },
   methods: {
     async fetchProfile() {
-      const uniqueId = localStorage.getItem('profileUniqueId'); // Retrieve uniqueId from localStorage
+      const uniqueId = localStorage.getItem('profileUniqueId');
       if (!uniqueId) {
         console.error("No unique ID found in localStorage");
         this.showError("No profile ID provided. Please search for a profile first.");
@@ -177,19 +269,18 @@ export default {
       if (!/^MC-[A-Z0-9]{7}$/.test(uniqueId)) {
         console.error("Invalid unique ID format in localStorage");
         this.showError("Invalid profile ID format. Please enter a valid ID (e.g., MC-1234567).");
-        localStorage.removeItem('profileUniqueId'); // Clear invalid ID
+        localStorage.removeItem('profileUniqueId');
         return;
       }
 
       try {
-        // Query Firestore to find the profile with the matching uniqueId
         const profilesRef = collection(db, "Profiles");
         const q = query(profilesRef, where("uniqueId", "==", uniqueId));
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-          const profileDoc = querySnapshot.docs[0]; // Get the first matching document
-          const profileEmail = profileDoc.id; // Document ID is the email
+          const profileDoc = querySnapshot.docs[0];
+          const profileEmail = profileDoc.id;
           const docRef = doc(db, "Profiles", profileEmail);
           const docSnap = await getDoc(docRef);
 
@@ -206,9 +297,9 @@ export default {
               allowance: data.allowance || '$0',
               image: data.image || 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop',
               status: data.status || 'inActive',
+              uniqueId: data.uniqueId || uniqueId,
               createdAt: this.convertToDate(data.createdAt),
             };
-            // Optionally clear localStorage after successful fetch to prevent stale data
             localStorage.removeItem('profileUniqueId');
           } else {
             console.error("No such profile exists!");
@@ -232,6 +323,7 @@ export default {
         title: "Error",
         text: message,
       });
+      this.$router.push('/profileView');
     },
     formatDate(dateString) {
       if (!dateString) return '';
@@ -258,17 +350,60 @@ export default {
     },
     formatNumber(value) {
       if (!value || value === '0') return '0';
-      const number = parseFloat(value.replace(/[^0-9.]/g, '')); // Remove non-numeric characters
+      const strValue = String(value);
+      const number = parseFloat(strValue.replace(/[^0-9.]/g, ''));
       return isNaN(number) ? '0' : number.toLocaleString('en-US', { minimumFractionDigits: 0 });
     },
     formatCurrency(value) {
       if (!value || value === '$0') return '$0';
-      const number = parseFloat(value.replace(/[^0-9.]/g, '')); // Remove $ and non-numeric characters
+      const strValue = String(value);
+      const number = parseFloat(strValue.replace(/[^0-9.]/g, ''));
       return isNaN(number) ? '$0' : `$${number.toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
     },
+    formatWithdrawalAmount(value) {
+      const number = parseFloat(value);
+      return isNaN(number) ? '0.00' : number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    },
+    generateWithdrawalId(uniqueId) {
+      const timestamp = Date.now().toString(36).toUpperCase();
+      const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
+      const idPart = uniqueId.replace('MC-', '');
+      return `WD-${idPart}-${timestamp}-${randomStr}`;
+    },
+    openWithdrawalModal() {
+      this.showWithdrawalModal = true;
+      this.withdrawalAmount = '';
+      this.withdrawalId = '';
+    },
+    closeWithdrawalModal() {
+      this.showWithdrawalModal = false;
+      this.withdrawalAmount = '';
+      this.withdrawalId = '';
+    },
+    handleWithdrawalSubmit() {
+      if (!this.withdrawalAmount || parseFloat(this.withdrawalAmount) <= 0) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid Amount",
+          text: "Please enter a valid withdrawal amount",
+        });
+        return;
+      }
+
+      if (!this.profile || !this.profile.uniqueId) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Profile information not available",
+        });
+        return;
+      }
+
+      this.withdrawalId = this.generateWithdrawalId(this.profile.uniqueId);
+    },
     handleBackToHome() {
-      localStorage.removeItem('profileUniqueId'); // Clear localStorage on navigation
-      this.$router.push('/profileView'); // Redirect to ProfileAuth page
+      localStorage.removeItem('profileUniqueId');
+      this.$router.push('/profileView');
     },
   },
   async created() {
@@ -415,6 +550,10 @@ export default {
 .verification-badge svg {
   width: 16px;
   height: 16px;
+}
+
+.verification-badge.inActive {
+  background: #f59e0b;
 }
 
 .quick-stats {
@@ -629,7 +768,6 @@ export default {
   height: 20px;
 }
 
-
 .btn-secondary {
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
@@ -641,6 +779,18 @@ export default {
   background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #C30000 0%, #ff0000 100%);
+  color: #ffffff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #ff0000 0%, #C30000 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(195, 0, 0, 0.4);
 }
 
 .branding-footer {
@@ -680,36 +830,253 @@ export default {
   line-height: 1.5;
 }
 
-.verification-badge {
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+  border: 1px solid rgba(195, 0, 0, 0.3);
+  border-radius: 24px;
+  max-width: 500px;
+  width: 100%;
+  padding: 40px;
+  position: relative;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-close {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
-  background: #10b981; /* Green for active/Verified */
-  border: 3px solid #ffffff;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ffffff;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.verification-badge.unverified {
-  background: #f59e0b; /* Amber for inActive/Unverified */
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
 }
 
-.badge.verified {
-  background: rgba(16, 185, 129, 0.2);
+.modal-close svg {
+  width: 24px;
+  height: 24px;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.modal-icon {
+  width: 48px;
+  height: 48px;
+  color: #C30000;
+  margin: 0 auto 16px;
+}
+
+.modal-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.modal-body {
+  color: #ffffff;
+}
+
+.modal-description {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.form-group {
+  margin-bottom: 32px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 12px;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-prefix {
+  position: absolute;
+  left: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #C30000;
+  pointer-events: none;
+}
+
+.form-input {
+  width: 100%;
+  padding: 16px 20px 16px 48px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: rgba(195, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.modal-submit {
+  width: 100%;
+}
+
+.success-message {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.success-icon {
+  width: 64px;
+  height: 64px;
   color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  margin: 0 auto 16px;
 }
 
-.badge.unverified {
-  background: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+.success-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.withdrawal-details {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row.highlight {
+  background: rgba(195, 0, 0, 0.1);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 8px;
+  border-bottom: none;
+}
+
+.detail-row .detail-label {
+  font-size: 0.875rem;
+}
+
+.detail-row .detail-value {
+  font-size: 1rem;
+  text-align: right;
+  word-break: break-all;
+}
+
+.info-box {
+  background: rgba(195, 0, 0, 0.1);
+  border: 1px solid rgba(195, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.info-text {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+}
+
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-list li {
+  color: rgba(255, 255, 255, 0.8);
+  padding: 8px 0;
+  line-height: 1.6;
+}
+
+.info-list strong {
+  color: #C30000;
+  font-weight: 700;
 }
 
 @media (max-width: 768px) {
@@ -749,6 +1116,24 @@ export default {
 
   .quick-stats {
     justify-content: center;
+  }
+
+  .modal-content {
+    padding: 24px;
+  }
+
+  .modal-title {
+    font-size: 1.5rem;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .detail-row .detail-value {
+    text-align: center;
   }
 }
 </style>
